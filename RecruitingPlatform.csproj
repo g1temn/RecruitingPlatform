@@ -26,7 +26,6 @@
 
   <ItemGroup>
     <Folder Include="DTOs\" />
-    <Folder Include="Data\" />
     <Folder Include="Services\" />
   </ItemGroup>
   <Target Name="Tailwind" BeforeTargets="Build;PrepareForPublish">
