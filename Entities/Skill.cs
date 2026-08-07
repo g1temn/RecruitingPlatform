@@ -16,7 +16,13 @@ public class Skill
     public string Name { get; set; } = string.Empty;
 
     [Required]
+    public int SkillTypeId { get; set; }
+
+    [Required]
     public bool IsHardSkill { get; set; } = true;
+
+    [ForeignKey(nameof(SkillTypeId))]
+    public SkillType SkillType { get; set; } = null!;
 
     public IEnumerable<ResumeSkill> CandidateSkills { get; set; } = new List<ResumeSkill>();
     public IEnumerable<VacancySkill> VacancySkills { get; set; } = new List<VacancySkill>();

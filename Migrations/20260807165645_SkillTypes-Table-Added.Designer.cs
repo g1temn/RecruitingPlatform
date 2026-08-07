@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RecruitingPlatform.Data;
 
@@ -11,9 +12,11 @@ using RecruitingPlatform.Data;
 namespace RecruitingPlatform.Migrations
 {
     [DbContext(typeof(RecruitingPlatformDbContext))]
-    partial class RecruitingPlatformDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260807165645_SkillTypes-Table-Added")]
+    partial class SkillTypesTableAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
