@@ -226,6 +226,9 @@ namespace RecruitingPlatform.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("currencies");
                 });
 
@@ -239,9 +242,12 @@ namespace RecruitingPlatform.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("industries");
                 });
@@ -322,6 +328,9 @@ namespace RecruitingPlatform.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("regions");
                 });
@@ -434,10 +443,10 @@ namespace RecruitingPlatform.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.HasIndex("SkillTypeId");
+
+                    b.HasIndex("Name", "SkillTypeId")
+                        .IsUnique();
 
                     b.ToTable("skills");
                 });
@@ -869,7 +878,7 @@ namespace RecruitingPlatform.Migrations
             modelBuilder.Entity("RecruitingPlatform.Entities.Vacancy", b =>
                 {
                     b.HasOne("RecruitingPlatform.Entities.Company", "Company")
-                        .WithMany()
+                        .WithMany("Vacancies")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -921,6 +930,11 @@ namespace RecruitingPlatform.Migrations
             modelBuilder.Entity("RecruitingPlatform.Entities.ApplicationStatus", b =>
                 {
                     b.Navigation("Applications");
+                });
+
+            modelBuilder.Entity("RecruitingPlatform.Entities.Company", b =>
+                {
+                    b.Navigation("Vacancies");
                 });
 
             modelBuilder.Entity("RecruitingPlatform.Entities.Currency", b =>

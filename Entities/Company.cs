@@ -21,4 +21,6 @@ public class Company
 
     [Required]
     public bool IsDeleted { get; set; } = false;
+
+    public IEnumerable<Vacancy> Vacancies { get; set; } = new List<Vacancy>();
 }

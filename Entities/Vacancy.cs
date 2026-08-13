@@ -38,6 +38,7 @@ public class Vacancy
     [Required]
     public int SalaryCurrencyId { get; set; }
 
+    [Required]
     public bool IsActive { get; set; } = true;
 
     [Required]
@@ -61,6 +62,6 @@ public class Vacancy
     [ForeignKey(nameof(SalaryCurrencyId))]
     public Currency Currency { get; set; } = null!;
 
-    public ICollection<VacancySkill> VacancySkills { get; set; } = new List<VacancySkill>();
-    public ICollection<Application> Applications { get; set; } = new List<Application>();
+    public IEnumerable<VacancySkill> VacancySkills { get; set; } = new List<VacancySkill>();
+    public IEnumerable<Application> Applications { get; set; } = new List<Application>();
 }

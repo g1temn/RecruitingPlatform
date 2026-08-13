@@ -12,7 +12,7 @@ using RecruitingPlatform.Data;
 namespace RecruitingPlatform.Migrations
 {
     [DbContext(typeof(RecruitingPlatformDbContext))]
-    [Migration("20260806194359_Initial-Migration")]
+    [Migration("20260813085201_Initial-Migration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -229,6 +229,9 @@ namespace RecruitingPlatform.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("currencies");
                 });
 
@@ -242,9 +245,12 @@ namespace RecruitingPlatform.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("industries");
                 });
@@ -325,6 +331,9 @@ namespace RecruitingPlatform.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("regions");
                 });
@@ -432,12 +441,38 @@ namespace RecruitingPlatform.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int>("SkillTypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SkillTypeId");
+
+                    b.HasIndex("Name", "SkillTypeId")
+                        .IsUnique();
+
+                    b.ToTable("skills");
+                });
+
+            modelBuilder.Entity("RecruitingPlatform.Entities.SkillType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("skills");
+                    b.ToTable("skill_types");
                 });
 
             modelBuilder.Entity("RecruitingPlatform.Entities.Specialty", b =>
@@ -810,6 +845,17 @@ namespace RecruitingPlatform.Migrations
                     b.Navigation("Skill");
                 });
 
+            modelBuilder.Entity("RecruitingPlatform.Entities.Skill", b =>
+                {
+                    b.HasOne("RecruitingPlatform.Entities.SkillType", "SkillType")
+                        .WithMany("Skills")
+                        .HasForeignKey("SkillTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("SkillType");
+                });
+
             modelBuilder.Entity("RecruitingPlatform.Entities.Specialty", b =>
                 {
                     b.HasOne("RecruitingPlatform.Entities.Industry", "Industry")
@@ -835,7 +881,7 @@ namespace RecruitingPlatform.Migrations
             modelBuilder.Entity("RecruitingPlatform.Entities.Vacancy", b =>
                 {
                     b.HasOne("RecruitingPlatform.Entities.Company", "Company")
-                        .WithMany()
+                        .WithMany("Vacancies")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -889,6 +935,11 @@ namespace RecruitingPlatform.Migrations
                     b.Navigation("Applications");
                 });
 
+            modelBuilder.Entity("RecruitingPlatform.Entities.Company", b =>
+                {
+                    b.Navigation("Vacancies");
+                });
+
             modelBuilder.Entity("RecruitingPlatform.Entities.Currency", b =>
                 {
                     b.Navigation("Vacancies");
@@ -929,6 +980,11 @@ namespace RecruitingPlatform.Migrations
                     b.Navigation("CandidateSkills");
 
                     b.Navigation("VacancySkills");
+                });
+
+            modelBuilder.Entity("RecruitingPlatform.Entities.SkillType", b =>
+                {
+                    b.Navigation("Skills");
                 });
 
             modelBuilder.Entity("RecruitingPlatform.Entities.User", b =>
