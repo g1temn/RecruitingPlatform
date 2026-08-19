@@ -4,12 +4,10 @@
 
 <div class="flex-grow flex flex-col items-center pt-24 pb-16 px-10 w-full">
 
-    <!-- The "Little Board" (Badge) above the title -->
     <span class="inline-block py-1.5 px-5 rounded-full bg-brand-cyan/20 text-brand-dark font-semibold text-sm mb-6 border border-brand-cyan/30">
         The summer practice project
     </span>
 
-    <!-- Hero Text Section with the restored gradient styling -->
     <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold font-poppins text-gray-900 mb-6 text-center tracking-tight leading-tight">
         Find the talent you need. <br class="hidden sm:block" />
         <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue to-brand-cyan">
@@ -21,17 +19,22 @@
         The easiest way to connect with top candidates or discover your next great career opportunity. All in one simple platform.
     </p>
 
-    <!-- Sign Up & Log In Buttons -->
     <div class="flex flex-col sm:flex-row gap-4 justify-center items-center w-full max-w-md">
-        <!-- Primary Button -->
-        <a class="bg-brand-blue text-white font-bold py-3.5 px-10 rounded-full hover:bg-brand-dark transition-colors shadow-sm hover:shadow-md w-full sm:w-auto text-center">
-            Sign up
+
+        <a 
+            asp-controller="Auth"
+            asp-action="SignUp"
+            class="bg-brand-blue text-white font-bold py-3.5 px-10 rounded-full hover:bg-brand-dark transition-colors shadow-sm hover:shadow-md w-full sm:w-auto text-center">
+            Sign Up
         </a>
 
-        <!-- Secondary Button -->
-        <a class="bg-white border-2 border-brand-red text-brand-red font-bold py-3 px-10 rounded-full hover:bg-brand-red hover:text-white transition-colors shadow-sm hover:shadow-md w-full sm:w-auto text-center">
-            Log in
+        <a 
+            asp-controller="Auth"
+            asp-action="LogIn"
+            class="bg-white border-2 border-brand-red text-brand-red font-bold py-3 px-10 rounded-full hover:bg-brand-red hover:text-white transition-colors shadow-sm hover:shadow-md w-full sm:w-auto text-center">
+            Log In
         </a>
+
     </div>
 
 </div>

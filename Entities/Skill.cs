@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace RecruitingPlatform.Entities;
 
 [Table("skills")]
-[Index(nameof(Name), IsUnique = true)]
+[Index(nameof(Name), nameof(SkillTypeId), IsUnique = true)]
 public class Skill
 {
     [Key]

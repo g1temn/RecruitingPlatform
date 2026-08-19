@@ -20,6 +20,7 @@ public class Application
     [Required]
     public int ApplicationStatusId { get; set; }
 
+    [Required]
     public DateTime AppliedAt { get; set; } = DateTime.UtcNow;
 
     [ForeignKey(nameof(VacancyId))]

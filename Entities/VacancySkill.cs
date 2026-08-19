@@ -8,10 +8,8 @@ namespace RecruitingPlatform.Entities;
 [PrimaryKey(nameof(SkillId), nameof(VacancyId))]
 public class VacancySkill
 {
-    [Required]
     public int SkillId { get; set; }
 
-    [Required]
     public int VacancyId { get; set; }
 
     [ForeignKey(nameof(SkillId))]

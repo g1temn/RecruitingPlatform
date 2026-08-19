@@ -59,6 +59,18 @@ namespace RecruitingPlatform.Data
             {
                 fk.DeleteBehavior = DeleteBehavior.Restrict;
             }
+            
+            // tell ef to establish a 1:1 relationship between user and job seeker
+            builder.Entity<User>()
+                .HasOne(u => u.JobSeeker)
+                .WithOne(j => j.User)
+                .HasForeignKey<JobSeeker>(j => j.Id);
+            
+            // tell ef to establish a 1:1 relationship between user and company
+            builder.Entity<User>()
+                .HasOne(u => u.Company)
+                .WithOne(c => c.User)
+                .HasForeignKey<Company>(c => c.Id);
         }
     }
 }

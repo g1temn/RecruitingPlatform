@@ -2,16 +2,16 @@
 @import "tailwindcss";
 
 @theme {
+    --color-brand-light-blue: #F6F7FB;
     --color-brand-red: #C33C54;
     --color-brand-dark: #254E70;
     --color-brand-blue: #37718E;
     --color-brand-cyan: #8EE3EF;
     --color-brand-mint: #AEF3E7;
-
     --font-inter: "Inter", sans-serif;
     --font-poppins: "Poppins", sans-serif;
 }
 
-a {
+a, button {
     cursor: pointer;
 }
