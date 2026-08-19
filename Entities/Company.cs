@@ -7,6 +7,7 @@ namespace RecruitingPlatform.Entities;
 public class Company
 {
     [Key]
+    [ForeignKey(nameof(User))]
     public int Id { get; set; }
 
     [Required]
@@ -21,6 +22,8 @@ public class Company
 
     [Required]
     public bool IsDeleted { get; set; } = false;
+
+    public User User { get; set; } = null!;
 
     public IEnumerable<Vacancy> Vacancies { get; set; } = new List<Vacancy>();
 }

@@ -25,23 +25,6 @@ namespace RecruitingPlatform.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "companies",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    WebsiteUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ContactPhone = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_companies", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "currencies",
                 columns: table => new
                 {
@@ -118,7 +101,6 @@ namespace RecruitingPlatform.Migrations
                     RefreshTokenExpiry = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    CompanyId = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -137,12 +119,6 @@ namespace RecruitingPlatform.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_users", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_users_companies_CompanyId",
-                        column: x => x.CompanyId,
-                        principalTable: "companies",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -223,6 +199,28 @@ namespace RecruitingPlatform.Migrations
                         name: "FK_role_claims_user_roles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "user_roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "companies",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    WebsiteUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ContactPhone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_companies", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_companies_users_Id",
+                        column: x => x.Id,
+                        principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -645,11 +643,6 @@ namespace RecruitingPlatform.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
-                name: "IX_users_CompanyId",
-                table: "users",
-                column: "CompanyId");
-
-            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "users",
                 column: "NormalizedUserName",
@@ -734,6 +727,9 @@ namespace RecruitingPlatform.Migrations
                 name: "skill_types");
 
             migrationBuilder.DropTable(
+                name: "companies");
+
+            migrationBuilder.DropTable(
                 name: "currencies");
 
             migrationBuilder.DropTable(
@@ -750,9 +746,6 @@ namespace RecruitingPlatform.Migrations
 
             migrationBuilder.DropTable(
                 name: "industries");
-
-            migrationBuilder.DropTable(
-                name: "companies");
         }
     }
 }

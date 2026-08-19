@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RecruitingPlatform.Data;
+using RecruitingPlatform.Entities;
+using RecruitingPlatform.Services.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +11,30 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<RecruitingPlatformDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddIdentity<User, UserRole>(options =>
+{
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredLength = 8;
+
+    options.User.RequireUniqueEmail = true;
+})
+.AddEntityFrameworkStores<RecruitingPlatformDbContext>()
+.AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.ExpireTimeSpan = TimeSpan.FromDays(3);
+    options.SlidingExpiration = true;
+});
+
+builder.Services.AddScoped<ILogInService, LogInService>();
+builder.Services.AddScoped<ISignJobSeekerUpService, SignJobSeekerUpService>();
+builder.Services.AddScoped<ISignEmployerUpService, SignEmployerUpService>();
+builder.Services.AddScoped<ICheckEmailExsistsService, CheckEmailExistsService>();
 
 var app = builder.Build();
 

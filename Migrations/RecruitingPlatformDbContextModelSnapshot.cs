@@ -184,10 +184,7 @@ namespace RecruitingPlatform.Migrations
             modelBuilder.Entity("RecruitingPlatform.Entities.Company", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ContactPhone")
                         .HasColumnType("nvarchar(max)");
@@ -509,9 +506,6 @@ namespace RecruitingPlatform.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -571,8 +565,6 @@ namespace RecruitingPlatform.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -771,6 +763,17 @@ namespace RecruitingPlatform.Migrations
                     b.Navigation("Vacancy");
                 });
 
+            modelBuilder.Entity("RecruitingPlatform.Entities.Company", b =>
+                {
+                    b.HasOne("RecruitingPlatform.Entities.User", "User")
+                        .WithOne("Company")
+                        .HasForeignKey("RecruitingPlatform.Entities.Company", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("RecruitingPlatform.Entities.JobSeeker", b =>
                 {
                     b.HasOne("RecruitingPlatform.Entities.User", "User")
@@ -862,17 +865,6 @@ namespace RecruitingPlatform.Migrations
                         .IsRequired();
 
                     b.Navigation("Industry");
-                });
-
-            modelBuilder.Entity("RecruitingPlatform.Entities.User", b =>
-                {
-                    b.HasOne("RecruitingPlatform.Entities.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("RecruitingPlatform.Entities.Vacancy", b =>
@@ -986,6 +978,9 @@ namespace RecruitingPlatform.Migrations
 
             modelBuilder.Entity("RecruitingPlatform.Entities.User", b =>
                 {
+                    b.Navigation("Company")
+                        .IsRequired();
+
                     b.Navigation("JobSeeker")
                         .IsRequired();
                 });
