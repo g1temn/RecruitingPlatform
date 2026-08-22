@@ -37,6 +37,7 @@ builder.Services.AddScoped<ISignJobSeekerUpService, SignJobSeekerUpService>();
 builder.Services.AddScoped<ISignEmployerUpService, SignEmployerUpService>();
 builder.Services.AddScoped<ICheckEmailExsistsService, CheckEmailExistsService>();
 builder.Services.AddScoped<IGetVacanciesWithFiltersService, GetVacanciesWithFiltersService>();
+builder.Services.AddScoped<IGetVacancyByIdService, GetVacancyByIdService>();
 
 var app = builder.Build();
 

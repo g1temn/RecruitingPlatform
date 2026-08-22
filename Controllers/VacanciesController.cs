@@ -6,13 +6,14 @@ using RecruitingPlatform.Services.Vacancies;
 
 namespace RecruitingPlatform.Controllers
 {
-    public class VacanciesController (
-        IGetVacanciesWithFiltersService _getVacanciesWithFiltersService)
+    public class VacanciesController(
+        IGetVacanciesWithFiltersService _getVacanciesWithFiltersService,
+        IGetVacancyByIdService _getVacancyByIdService)
         : Controller
     {
         [Authorize(Roles = nameof(PossibleUserRole.JobSeeker) + "," + nameof(PossibleUserRole.Admin))]
         [HttpGet]
-        public async Task<IActionResult> Index([FromQuery] VacancyFiltersDto filters)
+        public async Task<IActionResult> Index([FromQuery]  VacancyFiltersDto filters)
         {
             if (filters.Page < 1) filters.Page = 1;
 
@@ -25,5 +26,15 @@ namespace RecruitingPlatform.Controllers
 
             return View(result.Items);
         }
+
+        [Authorize(Roles = nameof(PossibleUserRole.JobSeeker) + "," + nameof(PossibleUserRole.Admin))]
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            var vacancy = await _getVacancyByIdService.ExecuteAsync(id);
+            if (vacancy == null) return View("VacancyNotFound");
+            return View(vacancy);
+        }
+
     }
 }
