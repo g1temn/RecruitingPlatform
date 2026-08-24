@@ -14,6 +14,7 @@ public class GetVacanciesWithFiltersService (
     public async Task<PagedResultDto<Vacancy>> ExecuteAsync(VacancyFiltersDto dto)
     {
         var query = _dbContext.Vacancies
+            .AsNoTracking()
             .Include(v => v.Company)
             .Include(v => v.Location)
             .Include(v => v.Specialty)
