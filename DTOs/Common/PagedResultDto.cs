@@ -1,0 +1,9 @@
+﻿namespace RecruitingPlatform.DTOs.Common;
+
+public class PagedResultDto<T>
+{
+    public IEnumerable<T> Items { get; set; } = new List<T>();
+    public int TotalItems { get; set; }
+    public int TotalPages { get; set; }
+    public int CurrentPage { get; set; }
+}
