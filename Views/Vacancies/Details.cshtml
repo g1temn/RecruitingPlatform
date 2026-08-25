@@ -4,6 +4,15 @@
 }
 
 <main class="max-w-7xl flex-grow mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full relative flex flex-col font-inter">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="mb-6 w-full bg-brand-mint/20 border border-brand-mint/50 text-brand-dark px-5 py-4 rounded-xl flex items-center gap-3 shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-blue shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span class="font-semibold text-sm sm:text-base">@TempData["SuccessMessage"]</span>
+        </div>
+    }
 
     <div class="w-full bg-brand-light-blue rounded-2xl p-6 sm:p-8 border border-brand-cyan/30 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
 
