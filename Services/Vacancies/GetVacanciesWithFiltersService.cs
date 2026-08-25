@@ -69,7 +69,7 @@ public class GetVacanciesWithFiltersService (
         int totalPages = (int)Math.Ceiling(totalItems / (double)VacanciesConstants.NumberOfVacanciesOnOnePage);
 
         var pagedVacancies = await query
-            .OrderByDescending(v => v.Id)
+            .OrderByDescending(v => v.CreatedAt)
             .Skip((dto.Page - 1) * VacanciesConstants.NumberOfVacanciesOnOnePage)
             .Take(VacanciesConstants.NumberOfVacanciesOnOnePage)
             .ToListAsync();
