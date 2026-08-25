@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using RecruitingPlatform.Data;
 using RecruitingPlatform.Entities;
 using RecruitingPlatform.Services.Auth;
+using RecruitingPlatform.Services.Resumes;
 using RecruitingPlatform.Services.Vacancies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,6 +39,8 @@ builder.Services.AddScoped<ISignEmployerUpService, SignEmployerUpService>();
 builder.Services.AddScoped<ICheckEmailExsistsService, CheckEmailExistsService>();
 builder.Services.AddScoped<IGetVacanciesWithFiltersService, GetVacanciesWithFiltersService>();
 builder.Services.AddScoped<IGetVacancyByIdService, GetVacancyByIdService>();
+builder.Services.AddScoped<IGetResumesWithFiltersService, GetResumesWithFiltersService>();
+builder.Services.AddScoped<IGetResumeByIdService, GetResumeByIdService>();
 
 var app = builder.Build();
 
