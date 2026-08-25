@@ -19,28 +19,38 @@
                     </a>
                 </div>
 
-                <nav class="hidden md:flex gap-6 text-sm font-semibold text-gray-600">
-                    @* <a href="#" class="hover:text-brand-blue flex items-center gap-1">Candidates </a>
-                    <a href="#" class="hover:text-brand-blue flex items-center gap-1">Employers </a> *@
-                </nav>
-
             </div>
 
             <div class="flex items-center gap-6">
 
-                <a 
-                    asp-controller="Auth"
-                    asp-action="LogIn"
-                    class="hidden sm:flex text-brand-blue font-semibold text-sm items-center gap-1 hover:opacity-80">
-                    Log In
-                </a>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a asp-controller="Profile" asp-action="Index"
+                       class="flex items-center gap-2 text-brand-dark font-bold text-sm transition-colors hover:brightness-75">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Profile
+                    </a>
 
-                <a 
-                    asp-controller="Auth"
-                    asp-action="SignUp"
-                    class="hidden sm:flex bg-brand-blue text-white px-6 py-2 rounded-full font-bold text-sm transition-all hover:bg-brand-dark">
-                    Sign Up
-                </a>
+                    <form asp-controller="Auth" asp-action="LogOut" method="post" class="m-0">
+                        <button type="submit" class="text-brand-red font-semibold text-sm transition-opacity hover:opacity-80">
+                            Log Out
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <a asp-controller="Auth" asp-action="LogIn"
+                       class="hidden sm:flex text-brand-blue font-semibold text-sm items-center gap-1 transition-opacity hover:opacity-80">
+                        Log In
+                    </a>
+
+                    <a asp-controller="Auth" asp-action="SignUp"
+                       class="hidden sm:flex bg-brand-blue text-white px-6 py-2 rounded-full font-bold text-sm transition-all hover:bg-brand-dark hover:scale-105 shadow-sm">
+                        Sign Up
+                    </a>
+                }
 
             </div>
 
