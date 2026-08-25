@@ -2,8 +2,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RecruitingPlatform.Data;
 using RecruitingPlatform.Entities;
+using RecruitingPlatform.Services.Applications;
 using RecruitingPlatform.Services.Auth;
 using RecruitingPlatform.Services.Resumes;
+using RecruitingPlatform.Services.Skills;
+using RecruitingPlatform.Services.Specialties;
 using RecruitingPlatform.Services.Vacancies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,6 +44,12 @@ builder.Services.AddScoped<IGetVacanciesWithFiltersService, GetVacanciesWithFilt
 builder.Services.AddScoped<IGetVacancyByIdService, GetVacancyByIdService>();
 builder.Services.AddScoped<IGetResumesWithFiltersService, GetResumesWithFiltersService>();
 builder.Services.AddScoped<IGetResumeByIdService, GetResumeByIdService>();
+builder.Services.AddScoped<IGetActiveResumesByJobSeekerIdService, GetActiveResumesByJobSeekerIdService>();
+builder.Services.AddScoped<ICreateApplicationService, CreateApplicationService>();
+builder.Services.AddScoped<IGetAllSpecialtiesService, GetAllSpecialtiesService>();
+builder.Services.AddScoped<IGetAllSkillsService, GetAllSkillsService>();
+builder.Services.AddScoped<ICreateApplicationService, CreateApplicationService>();
+builder.Services.AddScoped<IGetActiveResumesByJobSeekerIdService, GetActiveResumesByJobSeekerIdService>();
 
 var app = builder.Build();
 

@@ -1,14 +1,19 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RecruitingPlatform.DTOs.Resumes;
 using RecruitingPlatform.Enums;
 using RecruitingPlatform.Services.Resumes;
-using RecruitingPlatform.DTOs.Resumes;
+using RecruitingPlatform.Services.Skills;
+using RecruitingPlatform.Services.Specialties;
+using RecruitingPlatform.ViewModels.Resumes;
 
 namespace RecruitingPlatform.Controllers
 {
     public class ResumesController(
         IGetResumeByIdService _getResumeByIdService,
-        IGetResumesWithFiltersService _getResumesWithFiltersService)
+        IGetResumesWithFiltersService _getResumesWithFiltersService,
+        IGetAllSpecialtiesService _getAllSpecialtiesService,
+        IGetAllSkillsService _getAllSkillsService)
         : Controller
     {
         [Authorize(Roles = nameof(PossibleUserRole.Employer) + "," + nameof(PossibleUserRole.Admin))]
@@ -34,6 +39,26 @@ namespace RecruitingPlatform.Controllers
             var resume = await _getResumeByIdService.ExecuteAsync(id);
             if (resume == null) return View("ResumeNotFound");
             return View(resume);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            var specialties = await _getAllSpecialtiesService.ExecuteAsync();
+            var allSkills = await _getAllSkillsService.ExecuteAsync();
+
+            var groupedSkills = allSkills
+                .GroupBy(s => s.SkillType?.Name ?? "Інше")
+                .ToDictionary(g => g.Key, g => g.ToList());
+
+            var viewModel = new CreateResumeViewModel
+            {
+                Specialties = specialties,
+                GroupedSkills = groupedSkills,
+                FormData = new CreateResumeDto()
+            };
+
+            return View(viewModel);
         }
     }
 }
