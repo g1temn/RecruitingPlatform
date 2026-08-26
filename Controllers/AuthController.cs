@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RecruitingPlatform.Const.Auth;
 using RecruitingPlatform.DTOs.Auth;
@@ -9,6 +11,7 @@ namespace RecruitingPlatform.Controllers;
 
 public class AuthController(
     ILogInService _logInService,
+    ILogOutService _logOutService,
     ISignEmployerUpService _signEmployerUpService,
     ISignJobSeekerUpService _signJobSeekerUpService,
     ICheckEmailExsistsService _checkEmailExsistsService)
@@ -120,5 +123,13 @@ public class AuthController(
         ModelState.AddModelError(string.Empty, AuthConstants.EmployerRegistrationError);
         ViewBag.BaseData = dto as SignUpBaseDto;
         return View(dto);
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> LogOut()
+    {
+        await _logOutService.ExecuteAsync();
+        return RedirectToAction("Index", "Home");
     }
 }
