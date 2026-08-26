@@ -38,6 +38,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddScoped<ILogInService, LogInService>();
+builder.Services.AddScoped<ILogOutService, LogOutService>();
 builder.Services.AddScoped<ISignJobSeekerUpService, SignJobSeekerUpService>();
 builder.Services.AddScoped<ISignEmployerUpService, SignEmployerUpService>();
 builder.Services.AddScoped<ICheckEmailExsistsService, CheckEmailExistsService>();
