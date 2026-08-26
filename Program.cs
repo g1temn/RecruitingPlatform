@@ -52,6 +52,7 @@ builder.Services.AddScoped<IGetAllSkillsService, GetAllSkillsService>();
 builder.Services.AddScoped<ICreateApplicationService, CreateApplicationService>();
 builder.Services.AddScoped<IGetActiveResumesByJobSeekerIdService, GetActiveResumesByJobSeekerIdService>();
 builder.Services.AddScoped<IGetJobSeekerProfileService, GetJobSeekerProfileService>();
+builder.Services.AddScoped<IGetEmployerProfileService, GetEmployerProfileService>();
 
 var app = builder.Build();
 

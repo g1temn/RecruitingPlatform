@@ -27,7 +27,7 @@ namespace RecruitingPlatform.Controllers
             return View(result.Items);
         }
 
-        [Authorize(Roles = nameof(PossibleUserRole.JobSeeker) + "," + nameof(PossibleUserRole.Admin))]
+        [Authorize(Roles = nameof(PossibleUserRole.JobSeeker) + "," + nameof(PossibleUserRole.Admin) + "," + nameof(PossibleUserRole.Employer))]
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {

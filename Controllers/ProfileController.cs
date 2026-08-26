@@ -13,9 +13,9 @@ public class ProfileController : Controller
         {
             return RedirectToAction("Index", "JobSeekerProfile");
         }
-        else if (User.IsInRole("Company"))
+        else if (User.IsInRole("Employer"))
         {
-            return RedirectToAction("Index", "CompanyProfile");
+            return RedirectToAction("Index", "EmployerProfile");
         }
         else if (User.IsInRole("Admin"))
         {
