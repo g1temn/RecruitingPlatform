@@ -4,6 +4,8 @@ using RecruitingPlatform.Data;
 using RecruitingPlatform.Entities;
 using RecruitingPlatform.Services.Applications;
 using RecruitingPlatform.Services.Auth;
+using RecruitingPlatform.Services.Currencies;
+using RecruitingPlatform.Services.Locations;
 using RecruitingPlatform.Services.Profile;
 using RecruitingPlatform.Services.Resumes;
 using RecruitingPlatform.Services.Skills;
@@ -54,6 +56,9 @@ builder.Services.AddScoped<ICreateApplicationService, CreateApplicationService>(
 builder.Services.AddScoped<IGetActiveResumesByJobSeekerIdService, GetActiveResumesByJobSeekerIdService>();
 builder.Services.AddScoped<IGetJobSeekerProfileService, GetJobSeekerProfileService>();
 builder.Services.AddScoped<IGetEmployerProfileService, GetEmployerProfileService>();
+builder.Services.AddScoped<IGetAllLocationsService, GetAllLocationsService>();
+builder.Services.AddScoped<IGetAllCurrenciesService, GetAllCurrenciesService>();
+builder.Services.AddScoped<ICreateVacancyService, CreateVacancyService>();
 
 var app = builder.Build();
 
