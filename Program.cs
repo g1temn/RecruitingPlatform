@@ -59,6 +59,9 @@ builder.Services.AddScoped<IGetEmployerProfileService, GetEmployerProfileService
 builder.Services.AddScoped<IGetAllLocationsService, GetAllLocationsService>();
 builder.Services.AddScoped<IGetAllCurrenciesService, GetAllCurrenciesService>();
 builder.Services.AddScoped<ICreateVacancyService, CreateVacancyService>();
+builder.Services.AddScoped<IGetAllApplicationStatusesService, GetAllApplicationStatusesService>();
+builder.Services.AddScoped<IGetApplicationForReviewService, GetApplicationForReviewService>();
+builder.Services.AddScoped<IUpdateApplicationStatusService, UpdateApplicationStatusService>();
 
 var app = builder.Build();
 
