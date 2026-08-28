@@ -20,7 +20,6 @@ namespace RecruitingPlatform.Data
         public DbSet<Specialty> Specialties { get; set; }
         public DbSet<Skill> Skills { get; set; }
         public DbSet<Resume> Resumes { get; set; }
-        public DbSet<ResumeDocument> ResumeDocuments { get; set; }
         public DbSet<Vacancy> Vacancies { get; set; }
         public DbSet<ResumeSkill> ResumeSkills { get; set; }
         public DbSet<VacancySkill> VacancySkills { get; set; }
@@ -71,6 +70,8 @@ namespace RecruitingPlatform.Data
                 .HasOne(u => u.Company)
                 .WithOne(c => c.User)
                 .HasForeignKey<Company>(c => c.Id);
+
+            builder.SeedData();
         }
     }
 }

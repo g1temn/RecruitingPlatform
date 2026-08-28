@@ -1,0 +1,182 @@
+﻿@model RecruitingPlatform.ViewModels.Vacancies.CreateVacancyViewModel
+@{
+    ViewData["Title"] = "Створення вакансії";
+}
+
+<main class="max-w-5xl flex-grow mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 w-full font-inter">
+
+    <div class="mb-8">
+        <h1 class="font-poppins font-bold text-3xl sm:text-4xl text-brand-dark">
+            Створіть нову вакансію
+        </h1>
+        <p class="text-gray-500 mt-2 text-sm sm:text-base">
+            Заповніть деталі вакансії, щоб кандидати могли знайти її та відгукнутися.
+        </p>
+    </div>
+
+    <form asp-controller="Vacancies" asp-action="Create" method="post" class="bg-white p-6 sm:p-10 rounded-2xl border border-gray-200 shadow-sm flex flex-col gap-8">
+
+        <div class="flex flex-col gap-2">
+            <label asp-for="FormData.Title" class="font-poppins font-bold text-brand-dark text-lg">
+                Посада (Заголовок) <span class="text-brand-red">*</span>
+            </label>
+            <input asp-for="FormData.Title" type="text"
+                   class="w-full px-5 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-brand-blue focus:ring-4 focus:ring-brand-blue/10 transition-all text-sm sm:text-base placeholder:text-gray-400"
+                   placeholder="Наприклад: Senior Backend Developer" required>
+            <span asp-validation-for="FormData.Title" class="text-brand-red text-sm font-medium"></span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="flex flex-col gap-2">
+                <label asp-for="FormData.SpecialtyId" class="font-poppins font-bold text-brand-dark text-lg">
+                    Спеціальність <span class="text-brand-red">*</span>
+                </label>
+                <select asp-for="FormData.SpecialtyId"
+                        class="w-full px-5 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:border-brand-blue focus:ring-4 focus:ring-brand-blue/10 transition-all text-sm sm:text-base" required>
+                    <option value="">-- Оберіть спеціальність --</option>
+                    @foreach (var spec in Model.Specialties)
+                    {
+                        <option value="@spec.Id">@spec.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="FormData.SpecialtyId" class="text-brand-red text-sm font-medium"></span>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <label asp-for="FormData.LocationId" class="font-poppins font-bold text-brand-dark text-lg">
+                    Локація (Місто)
+                </label>
+                <select asp-for="FormData.LocationId"
+                        class="w-full px-5 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:border-brand-blue focus:ring-4 focus:ring-brand-blue/10 transition-all text-sm sm:text-base">
+                    <option value="">-- Не вказано (або віддалено) --</option>
+                    @foreach (var loc in Model.Locations)
+                    {
+                        <option value="@loc.Id">@loc.City</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <label class="flex items-center gap-3 cursor-pointer w-fit p-3 bg-brand-light-blue rounded-xl border border-brand-cyan/30 hover:border-brand-blue transition-colors">
+            <input asp-for="FormData.IsRemote" type="checkbox" class="w-5 h-5 text-brand-blue border-gray-300 rounded focus:ring-brand-blue">
+            <span class="font-semibold text-brand-dark text-sm sm:text-base">Можлива повністю віддалена робота</span>
+        </label>
+
+        <div class="flex flex-col gap-4 p-5 sm:p-6 rounded-xl border border-gray-100 bg-gray-50/50">
+            <h3 class="font-poppins font-bold text-brand-dark text-lg border-b-2 border-brand-cyan/40 pb-2 w-fit">Заробітна плата</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="flex flex-col gap-2">
+                    <label asp-for="FormData.MinSalary" class="text-sm font-semibold text-gray-700">Від</label>
+                    <input asp-for="FormData.MinSalary" type="number" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-brand-blue focus:ring-4 focus:ring-brand-blue/10 text-sm" placeholder="1000">
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label asp-for="FormData.MaxSalary" class="text-sm font-semibold text-gray-700">До</label>
+                    <input asp-for="FormData.MaxSalary" type="number" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-brand-blue focus:ring-4 focus:ring-brand-blue/10 text-sm" placeholder="3000">
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label asp-for="FormData.SalaryCurrencyId" class="text-sm font-semibold text-gray-700">Валюта <span class="text-brand-red">*</span></label>
+                    <select asp-for="FormData.SalaryCurrencyId" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:outline-none focus:border-brand-blue focus:ring-4 focus:ring-brand-blue/10 text-sm" required>
+                        <option value="">Оберіть...</option>
+                        @foreach (var curr in Model.Currencies)
+                        {
+                            <option value="@curr.Id">@curr.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <span asp-validation-for="FormData.SalaryCurrencyId" class="text-brand-red text-xs font-medium"></span>
+            <span asp-validation-for="FormData.MinSalary" class="text-brand-red text-xs font-medium"></span>
+            <span asp-validation-for="FormData.MaxSalary" class="text-brand-red text-xs font-medium"></span>
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <label asp-for="FormData.Description" class="font-poppins font-bold text-brand-dark text-lg">
+                Опис вакансії <span class="text-brand-red">*</span>
+            </label>
+            <textarea asp-for="FormData.Description" rows="8"
+                      class="w-full px-5 py-4 rounded-xl border border-gray-200 bg-white focus:outline-none focus:border-brand-blue focus:ring-4 focus:ring-brand-blue/10 transition-all resize-y text-sm sm:text-base placeholder:text-gray-400"
+                      placeholder="Вимоги, обов'язки, умови праці..." required></textarea>
+            <span asp-validation-for="FormData.Description" class="text-brand-red text-sm font-medium"></span>
+        </div>
+
+        <div class="flex flex-col gap-6">
+            <div>
+                <label class="font-poppins font-bold text-brand-dark text-lg border-b-2 border-brand-cyan/40 pb-2">
+                    Необхідні навички
+                </label>
+                <p class="text-xs sm:text-sm text-gray-500 mt-2">Оберіть технології, які вимагаються для цієї посади.</p>
+            </div>
+
+            <div class="flex flex-col gap-4">
+                @{
+                    int categoryIndex = 0;
+                }
+                @foreach (var group in Model.GroupedSkills)
+                {
+                    bool isFirst = categoryIndex == 0;
+
+                    <div class="flex flex-col border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
+
+                        <button type="button" onclick="toggleCategory('skills-@categoryIndex')"
+                                class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors focus:outline-none focus:bg-brand-light-blue">
+
+                            <h4 class="font-semibold text-brand-blue text-base flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-brand-mint" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                </svg>
+                                @group.Key
+                                <span class="text-xs text-gray-400 font-normal ml-2">(@group.Value.Count)</span>
+                            </h4>
+
+                            <svg id="icon-skills-@categoryIndex" xmlns="http://www.w3.org/2000/svg"
+                                 class="h-5 w-5 text-gray-400 transition-transform duration-300 @(isFirst ? "rotate-180" : "")"
+                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+
+                        <div id="skills-@categoryIndex" class="p-4 sm:p-5 border-t border-gray-200 transition-all @(isFirst ? "" : "hidden")">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                @foreach (var skill in group.Value)
+                                {
+                                    <label class="flex items-center gap-3 p-3 border border-gray-100 rounded-xl cursor-pointer hover:bg-brand-light-blue transition-colors has-[:checked]:border-brand-blue has-[:checked]:bg-brand-light-blue has-[:checked]:shadow-sm">
+                                        <input type="checkbox" name="FormData.SelectedSkillIds" value="@skill.Id"
+                                               class="w-5 h-5 text-brand-blue border-gray-300 rounded focus:ring-brand-blue transition-colors">
+                                        <span class="text-sm font-medium text-brand-dark">@skill.Name</span>
+                                    </label>
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                    categoryIndex++;
+                }
+            </div>
+        </div>
+
+        <div class="pt-8 border-t border-gray-100 flex flex-col sm:flex-row justify-end gap-4">
+            <a asp-controller="EmployerProfile" asp-action="Index" class="w-full sm:w-auto px-8 py-3.5 bg-gray-100 text-gray-700 text-center font-bold rounded-xl transition-all hover:bg-gray-200 duration-200 text-sm sm:text-base">
+                Скасувати
+            </a>
+            <button type="submit" class="w-full sm:w-auto px-10 py-3.5 bg-brand-blue text-white font-poppins font-bold rounded-xl shadow-md transition-all hover:bg-brand-dark hover:-translate-y-0.5 hover:shadow-lg focus:ring-4 focus:ring-brand-blue/30 duration-200 text-sm sm:text-base">
+                Створити вакансію
+            </button>
+        </div>
+    </form>
+
+</main>
+
+<script>
+    function toggleCategory(categoryId) {
+        const content = document.getElementById(categoryId);
+        const icon = document.getElementById('icon-' + categoryId);
+
+        if (content.classList.contains('hidden')) {
+            content.classList.remove('hidden');
+            icon.classList.add('rotate-180');
+        } else {
+            content.classList.add('hidden');
+            icon.classList.remove('rotate-180');
+        }
+    }
+</script>
