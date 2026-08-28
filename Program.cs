@@ -5,6 +5,7 @@ using RecruitingPlatform.Entities;
 using RecruitingPlatform.Services.Applications;
 using RecruitingPlatform.Services.Auth;
 using RecruitingPlatform.Services.Currencies;
+using RecruitingPlatform.Services.Employers;
 using RecruitingPlatform.Services.JobSeekers;
 using RecruitingPlatform.Services.Locations;
 using RecruitingPlatform.Services.Profile;
@@ -65,6 +66,7 @@ builder.Services.AddScoped<IGetApplicationForReviewService, GetApplicationForRev
 builder.Services.AddScoped<IUpdateApplicationStatusService, UpdateApplicationStatusService>();
 builder.Services.AddScoped<ICreateResumeService, CreateResumeService>();
 builder.Services.AddScoped<IEditJobSeekerProfileService, EditJobSeekerProfileService>();
+builder.Services.AddScoped<IEditEmployerProfileService, EditEmployerProfileService>();
 
 var app = builder.Build();
 
