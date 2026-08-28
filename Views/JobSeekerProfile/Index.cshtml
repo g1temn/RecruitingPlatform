@@ -37,11 +37,9 @@
             </div>
         </div>
 
-        <div class="z-10 sm:ml-auto mt-4 sm:mt-0">
-            <button class="px-6 py-2 bg-brand-light-blue text-brand-dark font-semibold rounded-xl hover:bg-brand-blue hover:text-white transition-colors text-sm border border-gray-200 shadow-sm">
-                Редагувати профіль
-            </button>
-        </div>
+        <a asp-controller="JobSeekerProfile" asp-action="Edit" class="text-center z-10 sm:ml-auto mt-4 sm:mt-0 px-6 py-2 bg-brand-light-blue text-brand-dark font-semibold rounded-xl hover:bg-brand-blue hover:text-white transition-colors text-sm border border-gray-200 shadow-sm">
+            Редагувати профіль
+        </a>
     </div>
 
     <!-- Сітка: Резюме та Заявки -->
@@ -122,7 +120,6 @@
 
                             <div class="border-t border-gray-100 pt-3 flex justify-between items-center text-xs text-gray-400 font-medium mt-1">
                                 <span>Дата подачі: @app.AppliedAt.ToString("dd.MM.yyyy")</span>
-                                <span>Резюме ID: #@app.ResumeId</span>
                             </div>
                         </div>
                     }
