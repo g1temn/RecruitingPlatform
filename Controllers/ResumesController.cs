@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RecruitingPlatform.Const.Resumes;
 using RecruitingPlatform.DTOs.Resumes;
 using RecruitingPlatform.Enums;
 using RecruitingPlatform.Services.Resumes;
 using RecruitingPlatform.Services.Skills;
 using RecruitingPlatform.Services.Specialties;
 using RecruitingPlatform.ViewModels.Resumes;
+using System.Security.Claims;
 
 namespace RecruitingPlatform.Controllers
 {
@@ -13,7 +15,8 @@ namespace RecruitingPlatform.Controllers
         IGetResumeByIdService _getResumeByIdService,
         IGetResumesWithFiltersService _getResumesWithFiltersService,
         IGetAllSpecialtiesService _getAllSpecialtiesService,
-        IGetAllSkillsService _getAllSkillsService)
+        IGetAllSkillsService _getAllSkillsService,
+        ICreateResumeService _createResumeService)
         : Controller
     {
         [Authorize(Roles = nameof(PossibleUserRole.Employer) + "," + nameof(PossibleUserRole.Admin))]
@@ -59,6 +62,37 @@ namespace RecruitingPlatform.Controllers
             };
 
             return View(viewModel);
+        }
+
+        [Authorize(Roles = nameof(PossibleUserRole.JobSeeker))]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CreateResumeDto formData)
+        {
+            if (!ModelState.IsValid)
+            {
+                var allSkills = await _getAllSkillsService.ExecuteAsync();
+
+                var viewModel = new CreateResumeViewModel
+                {
+                    Specialties = await _getAllSpecialtiesService.ExecuteAsync(),
+                    GroupedSkills = allSkills
+                        .GroupBy(s => s.SkillType?.Name ?? "Інше")
+                        .ToDictionary(g => g.Key, g => g.ToList()),
+                    FormData = formData
+                };
+
+                return View(viewModel);
+            }
+
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userIdString, out int jobSeekerId)) return Unauthorized();
+
+            var newResumeId = await _createResumeService.ExecuteAsync(formData, jobSeekerId);
+
+            TempData[ResumesConstants.SuccessMessageTempDataKey] = ResumesConstants.ResumeCreatedSuccessMessage;
+
+            return RedirectToAction(nameof(Details), new { id = newResumeId });
         }
     }
 }
