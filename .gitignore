@@ -364,3 +364,8 @@ FodyWeavers.xsd
 
 # Tailwind CSS output file
 wwwroot/css/output.css
+
+# envitonment variables
+.env
+.env.local
+.env.development
