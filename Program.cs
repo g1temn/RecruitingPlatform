@@ -62,6 +62,7 @@ builder.Services.AddScoped<ICreateVacancyService, CreateVacancyService>();
 builder.Services.AddScoped<IGetAllApplicationStatusesService, GetAllApplicationStatusesService>();
 builder.Services.AddScoped<IGetApplicationForReviewService, GetApplicationForReviewService>();
 builder.Services.AddScoped<IUpdateApplicationStatusService, UpdateApplicationStatusService>();
+builder.Services.AddScoped<ICreateResumeService, CreateResumeService>();
 
 var app = builder.Build();
 
