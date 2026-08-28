@@ -2,7 +2,7 @@
 
 public enum PossibleApplicationStatuses
 {
-    Applied = 1,
-    Approved = 2,
-    Rejected = 3,
+    Rejected = 1,
+    Applied = 2,
+    Approved = 3
 }

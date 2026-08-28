@@ -37,8 +37,6 @@ public class Resume
     [ForeignKey(nameof(SpecialtyId))]
     public Specialty Specialty { get; set; } = null!;
 
-    public ResumeDocument ResumeDocument { get; set; } = null!;
-
     public IEnumerable<ResumeSkill> ResumeSkills { get; set; } = new List<ResumeSkill>();
     public IEnumerable<Application> Applications { get; set; } = new List<Application>();
 }

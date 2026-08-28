@@ -22,27 +22,9 @@ public static class ModelBuilderExtensions
         );
 
         builder.Entity<UserRole>().HasData(
-            new UserRole
-            {
-                Id = 1,
-                Name = "JobSeeker",
-                NormalizedName = "JOBSEEKER",
-                ConcurrencyStamp = Guid.NewGuid().ToString()
-            },
-            new UserRole
-            {
-                Id = 2,
-                Name = "Employer",
-                NormalizedName = "EMPLOYER",
-                ConcurrencyStamp = Guid.NewGuid().ToString()
-            },
-            new UserRole
-            {
-                Id = 3,
-                Name = "Admin",
-                NormalizedName = "ADMIN",
-                ConcurrencyStamp = Guid.NewGuid().ToString()
-            }
+            new UserRole { Id = 1, Name = "JobSeeker", NormalizedName = "JOBSEEKER", ConcurrencyStamp = "b31b3294-13df-4740-9a3d-c1ef228229b4" },
+            new UserRole { Id = 2, Name = "Employer", NormalizedName = "EMPLOYER", ConcurrencyStamp = "4d5e2365-5c1a-4ba9-8260-1e1de44cc966" },
+            new UserRole { Id = 3, Name = "Admin", NormalizedName = "ADMIN", ConcurrencyStamp = "e8964319-21a4-49c8-89c0-96f3cf081045" }
         );
 
         builder.Entity<Region>().HasData(
