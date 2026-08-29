@@ -2,5 +2,5 @@
 
 public interface IDeleteResumeService
 {
-    Task<bool> DeleteAsync(int resumeId, int jobSeekerId);
+    Task<bool> DeleteAsync(int resumeId, int jobSeekerId, bool isAdmin = false);
 }

@@ -35,7 +35,7 @@ public static class AdminSeeder
         {
             var newAdmin = new User
             {
-                UserName = adminEmail,
+                UserName = adminEmail.Split("@")[0],
                 Email = adminEmail,
                 CreatedAt = DateTime.UtcNow,
                 IsDeleted = false

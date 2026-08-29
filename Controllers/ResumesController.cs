@@ -46,6 +46,7 @@ namespace RecruitingPlatform.Controllers
             return View(resume);
         }
 
+        [Authorize(Roles = nameof(PossibleUserRole.JobSeeker))]
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -97,14 +98,16 @@ namespace RecruitingPlatform.Controllers
             return RedirectToAction(nameof(Details), new { id = newResumeId });
         }
 
-        [Authorize(Roles = nameof(PossibleUserRole.JobSeeker))]
+        [Authorize(Roles = $"{nameof(PossibleUserRole.JobSeeker)},{nameof(PossibleUserRole.Admin)}")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!int.TryParse(userIdString, out int jobSeekerId)) return Unauthorized();
 
-            var dto = await _editResumeService.GetForEditAsync(id, jobSeekerId);
+            bool isAdmin = User.IsInRole(nameof(PossibleUserRole.Admin));
+
+            var dto = await _editResumeService.GetForEditAsync(id, jobSeekerId, isAdmin);
             if (dto == null) return NotFound(ResumesConstants.ResumeNotFoundErrorMessage);
 
             var allSkills = await _getAllSkillsService.ExecuteAsync();
@@ -118,7 +121,7 @@ namespace RecruitingPlatform.Controllers
             return View(viewModel);
         }
 
-        [Authorize(Roles = nameof(PossibleUserRole.JobSeeker))]
+        [Authorize(Roles = $"{nameof(PossibleUserRole.JobSeeker)},{nameof(PossibleUserRole.Admin)}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditResumeDto formData)
@@ -138,7 +141,9 @@ namespace RecruitingPlatform.Controllers
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!int.TryParse(userIdString, out int jobSeekerId)) return Unauthorized();
 
-            bool isSuccess = await _editResumeService.UpdateAsync(jobSeekerId, formData);
+            bool isAdmin = User.IsInRole(nameof(PossibleUserRole.Admin));
+
+            bool isSuccess = await _editResumeService.UpdateAsync(jobSeekerId, formData, isAdmin);
 
             if (!isSuccess)
             {
@@ -158,7 +163,7 @@ namespace RecruitingPlatform.Controllers
             return RedirectToAction(nameof(Details), new { id = formData.Id });
         }
 
-        [Authorize(Roles = nameof(PossibleUserRole.JobSeeker))]
+        [Authorize(Roles = $"{nameof(PossibleUserRole.JobSeeker)},{nameof(PossibleUserRole.Admin)}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
@@ -166,7 +171,9 @@ namespace RecruitingPlatform.Controllers
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!int.TryParse(userIdString, out int jobSeekerId)) return Unauthorized();
 
-            bool isSuccess = await _deleteResumeService.DeleteAsync(id, jobSeekerId);
+            bool isAdmin = User.IsInRole(nameof(PossibleUserRole.Admin));
+
+            bool isSuccess = await _deleteResumeService.DeleteAsync(id, jobSeekerId, isAdmin);
 
             if (!isSuccess)
             {
@@ -175,6 +182,11 @@ namespace RecruitingPlatform.Controllers
             }
 
             TempData[ResumesConstants.SuccessMessageTempDataKey] = ResumesConstants.ResumeDeletedSuccessMessage;
+
+            if (isAdmin)
+            {
+                return RedirectToAction("Index", "Admin", new { tab = "resumes" });
+            }
 
             return RedirectToAction("Index", "Profile");
         }

@@ -19,7 +19,7 @@ namespace RecruitingPlatform.Controllers
                     return RedirectToAction("Index", "Resumes");
 
                 else if (User.IsInRole(nameof(PossibleUserRole.Admin)))
-                    return RedirectToAction("Index", "Administration");  
+                    return RedirectToAction("Index", "Admin");  
             }
             return View();
         }

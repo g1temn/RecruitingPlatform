@@ -9,11 +9,11 @@ public class EditResumeService(
     RecruitingPlatformDbContext _dbContext)
     : IEditResumeService
 {
-    public async Task<EditResumeDto?> GetForEditAsync(int resumeId, int jobSeekerId)
+    public async Task<EditResumeDto?> GetForEditAsync(int resumeId, int jobSeekerId, bool isAdmin = false)
     {
         var resume = await _dbContext.Resumes
             .Include(r => r.ResumeSkills)
-            .FirstOrDefaultAsync(r => r.Id == resumeId && r.JobSeekerId == jobSeekerId && !r.IsDeleted);
+            .FirstOrDefaultAsync(r => r.Id == resumeId && (r.JobSeekerId == jobSeekerId || isAdmin) && !r.IsDeleted);
 
         if (resume == null) return null;
 
@@ -27,11 +27,11 @@ public class EditResumeService(
         };
     }
 
-    public async Task<bool> UpdateAsync(int jobSeekerId, EditResumeDto dto)
+    public async Task<bool> UpdateAsync(int jobSeekerId, EditResumeDto dto, bool isAdmin = false)
     {
         var resume = await _dbContext.Resumes
             .Include(r => r.ResumeSkills)
-            .FirstOrDefaultAsync(r => r.Id == dto.Id && r.JobSeekerId == jobSeekerId && !r.IsDeleted);
+            .FirstOrDefaultAsync(r => r.Id == dto.Id && (r.JobSeekerId == jobSeekerId || isAdmin) && !r.IsDeleted);
 
         if (resume == null) return false;
 
