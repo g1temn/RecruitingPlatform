@@ -122,6 +122,14 @@
                 <div class="flex flex-col gap-4">
                     @foreach (var app in Model.RecentApplications)
                     {
+                        var statusName = app.ApplicationStatus?.Name?.ToLower() ?? "";
+                        var statusClass = statusName switch
+                        {
+                            "approved" or "схвалено" or "прийнято" => "bg-brand-green/10 text-brand-green border-brand-green/30",
+                            "rejected" or "відхилено" => "bg-brand-red/10 text-brand-red border-brand-red/30",
+                            _ => "bg-brand-light-blue text-brand-dark border-brand-dark/20"
+                        };
+
                         <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:border-brand-cyan transition-colors flex flex-col gap-3">
 
                             <div class="flex justify-between items-start gap-4">
@@ -134,7 +142,7 @@
                                     <p class="text-sm text-brand-blue font-medium mt-1">На вакансію: <span class="text-gray-600">@app.Vacancy?.Title</span></p>
                                 </div>
 
-                                <span class="shrink-0 bg-brand-light-blue text-brand-dark text-xs font-bold px-3 py-1 rounded-md border border-brand-dark/20">
+                                <span class="shrink-0 text-xs font-bold px-3 py-1 rounded-md border @statusClass">
                                     @app.ApplicationStatus?.Name
                                 </span>
                             </div>
