@@ -10,6 +10,6 @@ public class GetAllLocationsService (
 {
     public async Task<IEnumerable<Location>> ExecuteAsync()
     {
-        return await _dbContext.Locations.ToListAsync<Location>();
+        return await _dbContext.Locations.OrderBy(l => l.City).ToListAsync<Location>();
     }
 }
