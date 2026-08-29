@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RecruitingPlatform.Const.Vacancies;
 using RecruitingPlatform.DTOs.Vacancies;
 using RecruitingPlatform.Enums;
 using RecruitingPlatform.Services.Currencies;
@@ -19,7 +20,9 @@ namespace RecruitingPlatform.Controllers
         ICreateVacancyService _createVacancyService,
         IGetAllSpecialtiesService _getAllSpecialtiesService,
         IGetAllCurrenciesService _getAllCurrenciesService,
-        IGetAllLocationsService _getAllLocationsService
+        IGetAllLocationsService _getAllLocationsService,
+        IEditVacancyService _editVacancyService,
+        IDeleteVacancyService _deleteVacancyService
         )
         : Controller
     {
@@ -93,6 +96,92 @@ namespace RecruitingPlatform.Controllers
             await _createVacancyService.ExecuteAsync(formData, companyId);
 
             TempData["SuccessMessage"] = "Вакансію успішно створено!";
+            return RedirectToAction("Index", "EmployerProfile");
+        }
+
+        [Authorize(Roles = nameof(PossibleUserRole.Employer))]
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userIdString, out int companyId)) return Unauthorized();
+
+            var dto = await _editVacancyService.GetForEditAsync(id, companyId);
+            if (dto == null) return NotFound(VacanciesConstants.VacancyNotFoundErrorMessage);
+
+            var allSkills = await _getAllSkillsService.ExecuteAsync();
+            var viewModel = new EditVacancyViewModel
+            {
+                Specialties = await _getAllSpecialtiesService.ExecuteAsync(),
+                Locations = await _getAllLocationsService.ExecuteAsync(),
+                Currencies = await _getAllCurrenciesService.ExecuteAsync(),
+                GroupedSkills = allSkills.GroupBy(s => s.SkillType?.Name ?? "Інше").ToDictionary(g => g.Key, g => g.ToList()),
+                FormData = dto
+            };
+
+            return View(viewModel);
+        }
+
+        [Authorize(Roles = nameof(PossibleUserRole.Employer))]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(EditVacancyDto formData)
+        {
+            if (!ModelState.IsValid)
+            {
+                var allSkills = await _getAllSkillsService.ExecuteAsync();
+                var viewModel = new EditVacancyViewModel
+                {
+                    Specialties = await _getAllSpecialtiesService.ExecuteAsync(),
+                    Locations = await _getAllLocationsService.ExecuteAsync(),
+                    Currencies = await _getAllCurrenciesService.ExecuteAsync(),
+                    GroupedSkills = allSkills.GroupBy(s => s.SkillType?.Name ?? "Інше").ToDictionary(g => g.Key, g => g.ToList()),
+                    FormData = formData
+                };
+                return View(viewModel);
+            }
+
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userIdString, out int companyId)) return Unauthorized();
+
+            bool isSuccess = await _editVacancyService.UpdateAsync(companyId, formData);
+
+            if (!isSuccess)
+            {
+                ModelState.AddModelError(string.Empty, VacanciesConstants.VacancyUpdateFailedMessage);
+                var allSkills = await _getAllSkillsService.ExecuteAsync();
+                var viewModel = new EditVacancyViewModel
+                {
+                    Specialties = await _getAllSpecialtiesService.ExecuteAsync(),
+                    Locations = await _getAllLocationsService.ExecuteAsync(),
+                    Currencies = await _getAllCurrenciesService.ExecuteAsync(),
+                    GroupedSkills = allSkills.GroupBy(s => s.SkillType?.Name ?? "Інше").ToDictionary(g => g.Key, g => g.ToList()),
+                    FormData = formData
+                };
+                return View(viewModel);
+            }
+
+            TempData[VacanciesConstants.SuccessMessageTempDataKey] = VacanciesConstants.VacancyUpdatedSuccessMessage;
+            return RedirectToAction(nameof(Details), new { id = formData.Id });
+        }
+
+        [Authorize(Roles = nameof(PossibleUserRole.Employer))]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userIdString, out int companyId)) return Unauthorized();
+
+            bool isSuccess = await _deleteVacancyService.DeleteAsync(id, companyId);
+
+            if (!isSuccess)
+            {
+                TempData[VacanciesConstants.ErrorMessageTempDataKey] = VacanciesConstants.VacancyDeleteFailedMessage;
+                return RedirectToAction(nameof(Details), new { id = id });
+            }
+
+            TempData[VacanciesConstants.SuccessMessageTempDataKey] = VacanciesConstants.VacancyDeletedSuccessMessage;
             return RedirectToAction("Index", "EmployerProfile");
         }
 

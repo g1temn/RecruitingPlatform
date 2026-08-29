@@ -90,7 +90,15 @@
                                 <p class="text-xs text-gray-400 mt-1">Створено: @vacancy.CreatedAt.ToString("dd.MM.yyyy")</p>
                             </div>
                             <div class="flex items-center gap-3 text-sm font-semibold shrink-0">
-                                <a href="#" class="text-brand-blue hover:brightness-75 transition-colors">Редагувати</a>
+                                <div class="flex items-center gap-3 text-sm font-semibold shrink-0">
+                                    <a asp-controller="Vacancies" asp-action="Edit" asp-route-id="@vacancy.Id" class="text-brand-blue hover:brightness-75 transition-colors">Редагувати</a>
+                                </div>
+                                <span class="text-gray-300">|</span>
+                                <form asp-controller="Vacancies" asp-action="Delete" asp-route-id="@vacancy.Id" method="post" class="inline" onsubmit="return confirm('Ви впевнені, що хочете видалити це резюме?');">
+                                    <button type="submit" class="text-brand-red hover:brightness-75 transition-colors bg-transparent border-none p-0 cursor-pointer font-semibold">
+                                        Видалити
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     }
