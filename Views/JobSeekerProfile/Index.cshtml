@@ -75,9 +75,13 @@
                                 <p class="text-xs text-gray-400 mt-1">Оновлено: @resume.UpdatedAt.ToString("dd.MM.yyyy")</p>
                             </div>
                             <div class="flex items-center gap-3 text-sm font-semibold shrink-0">
-                                <a href="#" class="text-brand-blue hover:brightness-75 transition-colors">Редагувати</a>
+                                <a asp-controller="Resumes" asp-action="Edit" asp-route-id="@resume.Id" class="text-brand-blue hover:brightness-75 transition-colors">Редагувати</a>
                                 <span class="text-gray-300">|</span>
-                                <a href="#" class="text-brand-red hover:brightness-75 transition-colors">Видалити</a>
+                                <form asp-controller="Resumes" asp-action="Delete" asp-route-id="@resume.Id" method="post" class="inline" onsubmit="return confirm('Ви впевнені, що хочете видалити це резюме?');">
+                                    <button type="submit" class="text-brand-red hover:brightness-75 transition-colors bg-transparent border-none p-0 cursor-pointer font-semibold">
+                                        Видалити
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     }

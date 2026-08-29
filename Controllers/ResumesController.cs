@@ -16,7 +16,9 @@ namespace RecruitingPlatform.Controllers
         IGetResumesWithFiltersService _getResumesWithFiltersService,
         IGetAllSpecialtiesService _getAllSpecialtiesService,
         IGetAllSkillsService _getAllSkillsService,
-        ICreateResumeService _createResumeService)
+        ICreateResumeService _createResumeService,
+        IEditResumeService _editResumeService,
+        IDeleteResumeService _deleteResumeService)
         : Controller
     {
         [Authorize(Roles = nameof(PossibleUserRole.Employer) + "," + nameof(PossibleUserRole.Admin))]
@@ -93,6 +95,88 @@ namespace RecruitingPlatform.Controllers
             TempData[ResumesConstants.SuccessMessageTempDataKey] = ResumesConstants.ResumeCreatedSuccessMessage;
 
             return RedirectToAction(nameof(Details), new { id = newResumeId });
+        }
+
+        [Authorize(Roles = nameof(PossibleUserRole.JobSeeker))]
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userIdString, out int jobSeekerId)) return Unauthorized();
+
+            var dto = await _editResumeService.GetForEditAsync(id, jobSeekerId);
+            if (dto == null) return NotFound(ResumesConstants.ResumeNotFoundErrorMessage);
+
+            var allSkills = await _getAllSkillsService.ExecuteAsync();
+            var viewModel = new EditResumeViewModel
+            {
+                Specialties = await _getAllSpecialtiesService.ExecuteAsync(),
+                GroupedSkills = allSkills.GroupBy(s => s.SkillType?.Name ?? "Інше").ToDictionary(g => g.Key, g => g.ToList()),
+                FormData = dto
+            };
+
+            return View(viewModel);
+        }
+
+        [Authorize(Roles = nameof(PossibleUserRole.JobSeeker))]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(EditResumeDto formData)
+        {
+            if (!ModelState.IsValid)
+            {
+                var allSkills = await _getAllSkillsService.ExecuteAsync();
+                var viewModel = new EditResumeViewModel
+                {
+                    Specialties = await _getAllSpecialtiesService.ExecuteAsync(),
+                    GroupedSkills = allSkills.GroupBy(s => s.SkillType?.Name ?? "Інше").ToDictionary(g => g.Key, g => g.ToList()),
+                    FormData = formData
+                };
+                return View(viewModel);
+            }
+
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userIdString, out int jobSeekerId)) return Unauthorized();
+
+            bool isSuccess = await _editResumeService.UpdateAsync(jobSeekerId, formData);
+
+            if (!isSuccess)
+            {
+                ModelState.AddModelError(string.Empty, ResumesConstants.ResumeUpdateFailedMessage);
+
+                var allSkills = await _getAllSkillsService.ExecuteAsync();
+                var viewModel = new EditResumeViewModel
+                {
+                    Specialties = await _getAllSpecialtiesService.ExecuteAsync(),
+                    GroupedSkills = allSkills.GroupBy(s => s.SkillType?.Name ?? "Інше").ToDictionary(g => g.Key, g => g.ToList()),
+                    FormData = formData
+                };
+                return View(viewModel);
+            }
+
+            TempData[ResumesConstants.SuccessMessageTempDataKey] = ResumesConstants.ResumeUpdatedSuccessMessage;
+            return RedirectToAction(nameof(Details), new { id = formData.Id });
+        }
+
+        [Authorize(Roles = nameof(PossibleUserRole.JobSeeker))]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userIdString, out int jobSeekerId)) return Unauthorized();
+
+            bool isSuccess = await _deleteResumeService.DeleteAsync(id, jobSeekerId);
+
+            if (!isSuccess)
+            {
+                TempData[ResumesConstants.ErrorMessageTempDataKey] = ResumesConstants.ResumeDeleteFailedMessage;
+                return RedirectToAction(nameof(Details), new { id = id });
+            }
+
+            TempData[ResumesConstants.SuccessMessageTempDataKey] = ResumesConstants.ResumeDeletedSuccessMessage;
+
+            return RedirectToAction("Index", "Profile");
         }
     }
 }
