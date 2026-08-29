@@ -69,6 +69,8 @@ builder.Services.AddScoped<IEditJobSeekerProfileService, EditJobSeekerProfileSer
 builder.Services.AddScoped<IEditEmployerProfileService, EditEmployerProfileService>();
 builder.Services.AddScoped<IEditResumeService,  EditResumeService>();
 builder.Services.AddScoped<IDeleteResumeService, DeleteResumeService>();
+builder.Services.AddScoped<IDeleteVacancyService, DeleteVacancyService>();
+builder.Services.AddScoped<IEditVacancyService, EditVacancyService>();
 
 var app = builder.Build();
 
