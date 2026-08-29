@@ -14,13 +14,18 @@ using RecruitingPlatform.Services.Skills;
 using RecruitingPlatform.Services.Specialties;
 using RecruitingPlatform.Services.Vacancies;
 
+DotNetEnv.Env.Load();
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING")
+                       ?? builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<RecruitingPlatformDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(connectionString));
 
 builder.Services.AddIdentity<User, UserRole>(options =>
 {
@@ -94,5 +99,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+await AdminSeeder.SeedAsync(app.Services);
 
 await app.RunAsync();
