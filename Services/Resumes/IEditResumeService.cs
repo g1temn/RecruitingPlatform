@@ -4,6 +4,6 @@ namespace RecruitingPlatform.Services.Resumes;
 
 public interface IEditResumeService
 {
-    Task<EditResumeDto?> GetForEditAsync(int resumeId, int jobSeekerId);
-    Task<bool> UpdateAsync(int jobSeekerId, EditResumeDto dto);
+    Task<EditResumeDto?> GetForEditAsync(int resumeId, int jobSeekerId, bool isAdmin = false);
+    Task<bool> UpdateAsync(int jobSeekerId, EditResumeDto dto, bool isAdmin = false);
 }

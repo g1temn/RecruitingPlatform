@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotNetEnv" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.10">
       <PrivateAssets>all</PrivateAssets>
@@ -22,6 +23,12 @@
   <ItemGroup>
 	<UpToDateCheckInput Include="wwwroot/css/site.css" />
 	<UpToDateCheckOutput Include="wwwroot/css/output.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update=".env">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Target Name="Tailwind" BeforeTargets="Build;PrepareForPublish">
 	<Exec Command="npm install" />

@@ -22,13 +22,12 @@ namespace RecruitingPlatform.Controllers
         IGetAllCurrenciesService _getAllCurrenciesService,
         IGetAllLocationsService _getAllLocationsService,
         IEditVacancyService _editVacancyService,
-        IDeleteVacancyService _deleteVacancyService
-        )
+        IDeleteVacancyService _deleteVacancyService)
         : Controller
     {
         [Authorize(Roles = nameof(PossibleUserRole.JobSeeker) + "," + nameof(PossibleUserRole.Admin))]
         [HttpGet]
-        public async Task<IActionResult> Index([FromQuery]  VacancyFiltersDto filters)
+        public async Task<IActionResult> Index([FromQuery] VacancyFiltersDto filters)
         {
             if (filters.Page < 1) filters.Page = 1;
 
@@ -51,6 +50,7 @@ namespace RecruitingPlatform.Controllers
             return View(vacancy);
         }
 
+        [Authorize(Roles = nameof(PossibleUserRole.Employer))]
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -70,7 +70,9 @@ namespace RecruitingPlatform.Controllers
             return View(viewModel);
         }
 
+        [Authorize(Roles = nameof(PossibleUserRole.Employer))]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateVacancyDto formData)
         {
             if (!ModelState.IsValid)
@@ -99,14 +101,16 @@ namespace RecruitingPlatform.Controllers
             return RedirectToAction("Index", "EmployerProfile");
         }
 
-        [Authorize(Roles = nameof(PossibleUserRole.Employer))]
+        [Authorize(Roles = $"{nameof(PossibleUserRole.Employer)},{nameof(PossibleUserRole.Admin)}")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!int.TryParse(userIdString, out int companyId)) return Unauthorized();
 
-            var dto = await _editVacancyService.GetForEditAsync(id, companyId);
+            bool isAdmin = User.IsInRole(nameof(PossibleUserRole.Admin));
+
+            var dto = await _editVacancyService.GetForEditAsync(id, companyId, isAdmin);
             if (dto == null) return NotFound(VacanciesConstants.VacancyNotFoundErrorMessage);
 
             var allSkills = await _getAllSkillsService.ExecuteAsync();
@@ -122,7 +126,7 @@ namespace RecruitingPlatform.Controllers
             return View(viewModel);
         }
 
-        [Authorize(Roles = nameof(PossibleUserRole.Employer))]
+        [Authorize(Roles = $"{nameof(PossibleUserRole.Employer)},{nameof(PossibleUserRole.Admin)}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditVacancyDto formData)
@@ -144,7 +148,9 @@ namespace RecruitingPlatform.Controllers
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!int.TryParse(userIdString, out int companyId)) return Unauthorized();
 
-            bool isSuccess = await _editVacancyService.UpdateAsync(companyId, formData);
+            bool isAdmin = User.IsInRole(nameof(PossibleUserRole.Admin));
+
+            bool isSuccess = await _editVacancyService.UpdateAsync(companyId, formData, isAdmin);
 
             if (!isSuccess)
             {
@@ -165,7 +171,7 @@ namespace RecruitingPlatform.Controllers
             return RedirectToAction(nameof(Details), new { id = formData.Id });
         }
 
-        [Authorize(Roles = nameof(PossibleUserRole.Employer))]
+        [Authorize(Roles = $"{nameof(PossibleUserRole.Employer)},{nameof(PossibleUserRole.Admin)}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
@@ -173,7 +179,9 @@ namespace RecruitingPlatform.Controllers
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!int.TryParse(userIdString, out int companyId)) return Unauthorized();
 
-            bool isSuccess = await _deleteVacancyService.DeleteAsync(id, companyId);
+            bool isAdmin = User.IsInRole(nameof(PossibleUserRole.Admin));
+
+            bool isSuccess = await _deleteVacancyService.DeleteAsync(id, companyId, isAdmin);
 
             if (!isSuccess)
             {
@@ -182,8 +190,13 @@ namespace RecruitingPlatform.Controllers
             }
 
             TempData[VacanciesConstants.SuccessMessageTempDataKey] = VacanciesConstants.VacancyDeletedSuccessMessage;
+
+            if (isAdmin)
+            {
+                return RedirectToAction("Index", "Admin", new { tab = "vacancies" });
+            }
+
             return RedirectToAction("Index", "EmployerProfile");
         }
-
     }
 }

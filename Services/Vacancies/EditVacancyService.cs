@@ -7,11 +7,11 @@ namespace RecruitingPlatform.Services.Vacancies;
 
 public class EditVacancyService(RecruitingPlatformDbContext _dbContext) : IEditVacancyService
 {
-    public async Task<EditVacancyDto?> GetForEditAsync(int vacancyId, int companyId)
+    public async Task<EditVacancyDto?> GetForEditAsync(int vacancyId, int companyId, bool isAdmin = false)
     {
         var vacancy = await _dbContext.Vacancies
             .Include(v => v.VacancySkills)
-            .FirstOrDefaultAsync(v => v.Id == vacancyId && v.CompanyId == companyId && !v.IsDeleted);
+            .FirstOrDefaultAsync(v => v.Id == vacancyId && (v.CompanyId == companyId || isAdmin) && !v.IsDeleted);
 
         if (vacancy == null) return null;
 
@@ -31,11 +31,11 @@ public class EditVacancyService(RecruitingPlatformDbContext _dbContext) : IEditV
         };
     }
 
-    public async Task<bool> UpdateAsync(int companyId, EditVacancyDto dto)
+    public async Task<bool> UpdateAsync(int companyId, EditVacancyDto dto, bool isAdmin = false)
     {
         var vacancy = await _dbContext.Vacancies
             .Include(v => v.VacancySkills)
-            .FirstOrDefaultAsync(v => v.Id == dto.Id && v.CompanyId == companyId && !v.IsDeleted);
+            .FirstOrDefaultAsync(v => v.Id == dto.Id && (v.CompanyId == companyId || isAdmin) && !v.IsDeleted);
 
         if (vacancy == null) return false;
 
