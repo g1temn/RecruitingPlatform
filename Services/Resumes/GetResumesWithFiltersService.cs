@@ -7,9 +7,7 @@ using RecruitingPlatform.Const.Resumes;
 
 namespace RecruitingPlatform.Services.Resumes;
 
-public class GetResumesWithFiltersService(
-    RecruitingPlatformDbContext _dbContext) 
-    : IGetResumesWithFiltersService
+public class GetResumesWithFiltersService(RecruitingPlatformDbContext _dbContext) : IGetResumesWithFiltersService
 {
     public async Task<PagedResultDto<Resume>> ExecuteAsync(ResumeFiltersDto filters)
     {
@@ -32,7 +30,10 @@ public class GetResumesWithFiltersService(
             query = query.Where(r =>
                 r.Title.ToLower().Contains(search) ||
                 r.Summary.ToLower().Contains(search) ||
-                (r.JobSeeker.FirstName + " " + r.JobSeeker.LastName).ToLower().Contains(search));
+                (r.JobSeeker.FirstName + " " + r.JobSeeker.LastName).ToLower().Contains(search) ||
+                (r.Specialty != null && r.Specialty.Name.ToLower().Contains(search)) ||
+                r.ResumeSkills.Any(rs => rs.Skill != null && rs.Skill.Name.ToLower().Contains(search))
+            );
         }
 
         var totalItems = await query.CountAsync();
