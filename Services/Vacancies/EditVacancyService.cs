@@ -5,7 +5,9 @@ using RecruitingPlatform.Entities;
 
 namespace RecruitingPlatform.Services.Vacancies;
 
-public class EditVacancyService(RecruitingPlatformDbContext _dbContext) : IEditVacancyService
+public class EditVacancyService(
+    RecruitingPlatformDbContext _dbContext) 
+    : IEditVacancyService
 {
     public async Task<EditVacancyDto?> GetForEditAsync(int vacancyId, int companyId, bool isAdmin = false)
     {

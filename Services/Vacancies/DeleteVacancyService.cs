@@ -3,7 +3,9 @@ using RecruitingPlatform.Data;
 
 namespace RecruitingPlatform.Services.Vacancies;
 
-public class DeleteVacancyService(RecruitingPlatformDbContext _dbContext) : IDeleteVacancyService
+public class DeleteVacancyService(
+    RecruitingPlatformDbContext _dbContext) 
+    : IDeleteVacancyService
 {
     public async Task<bool> DeleteAsync(int vacancyId, int companyId, bool isAdmin = false)
     {

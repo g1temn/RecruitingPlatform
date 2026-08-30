@@ -4,7 +4,9 @@ using RecruitingPlatform.DTOs.JobSeekers;
 
 namespace RecruitingPlatform.Services.JobSeekers;
 
-public class EditJobSeekerProfileService(RecruitingPlatformDbContext _dbContext) : IEditJobSeekerProfileService
+public class EditJobSeekerProfileService(
+    RecruitingPlatformDbContext _dbContext) 
+    : IEditJobSeekerProfileService
 {
     public async Task<EditJobSeekerDto?> GetProfileForEditAsync(int jobSeekerId)
     {

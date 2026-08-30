@@ -4,7 +4,9 @@ using RecruitingPlatform.Entities;
 
 namespace RecruitingPlatform.Services.Skills;
 
-public class GetAllSkillsService(RecruitingPlatformDbContext _dbContext) : IGetAllSkillsService
+public class GetAllSkillsService(
+    RecruitingPlatformDbContext _dbContext) 
+    : IGetAllSkillsService
 {
     public async Task<IEnumerable<Skill>> ExecuteAsync()
     {

@@ -4,7 +4,9 @@ using RecruitingPlatform.ViewModels.Profile;
 
 namespace RecruitingPlatform.Services.Profile;
 
-public class GetJobSeekerProfileService(RecruitingPlatformDbContext _dbContext) : IGetJobSeekerProfileService
+public class GetJobSeekerProfileService(
+    RecruitingPlatformDbContext _dbContext) 
+    : IGetJobSeekerProfileService
 {
     public async Task<JobSeekerProfileViewModel?> ExecuteAsync(int userId)
     {

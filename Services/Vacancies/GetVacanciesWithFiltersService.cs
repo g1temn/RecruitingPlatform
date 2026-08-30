@@ -7,7 +7,9 @@ using RecruitingPlatform.DTOs.Common;
 
 namespace RecruitingPlatform.Services.Vacancies;
 
-public class GetVacanciesWithFiltersService(RecruitingPlatformDbContext _dbContext) : IGetVacanciesWithFiltersService
+public class GetVacanciesWithFiltersService(
+    RecruitingPlatformDbContext _dbContext) 
+    : IGetVacanciesWithFiltersService
 {
     public async Task<PagedResultDto<Vacancy>> ExecuteAsync(VacancyFiltersDto dto)
     {

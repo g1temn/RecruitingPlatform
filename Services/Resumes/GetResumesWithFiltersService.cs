@@ -7,7 +7,9 @@ using RecruitingPlatform.Const.Resumes;
 
 namespace RecruitingPlatform.Services.Resumes;
 
-public class GetResumesWithFiltersService(RecruitingPlatformDbContext _dbContext) : IGetResumesWithFiltersService
+public class GetResumesWithFiltersService(
+    RecruitingPlatformDbContext _dbContext) 
+    : IGetResumesWithFiltersService
 {
     public async Task<PagedResultDto<Resume>> ExecuteAsync(ResumeFiltersDto filters)
     {
