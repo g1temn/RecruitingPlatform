@@ -36,7 +36,10 @@ namespace RecruitingPlatform.Controllers
             ViewBag.CurrentPage = result.CurrentPage;
             ViewBag.TotalPages = result.TotalPages;
             ViewBag.TotalItems = result.TotalItems;
+
             ViewBag.Filters = filters;
+            ViewBag.Locations = await _getAllLocationsService.ExecuteAsync();
+            ViewBag.Specialties = await _getAllSpecialtiesService.ExecuteAsync();
 
             return View(result.Items);
         }
