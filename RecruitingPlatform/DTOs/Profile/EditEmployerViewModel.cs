@@ -1,4 +1,4 @@
-﻿using RecruitingPlatform.DTOs.Employers;
+﻿using RecruitingPlatform.DTOs.Employer;
 
 namespace RecruitingPlatform.ViewModels.Employers;
 
