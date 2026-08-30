@@ -4,7 +4,9 @@ using RecruitingPlatform.Entities;
 
 namespace RecruitingPlatform.Services.Vacancies;
 
-public class CreateVacancyService(RecruitingPlatformDbContext _dbContext) : ICreateVacancyService
+public class CreateVacancyService(
+    RecruitingPlatformDbContext _dbContext) 
+    : ICreateVacancyService
 {
     public async Task ExecuteAsync(CreateVacancyDto dto, int companyId)
     {

@@ -4,7 +4,9 @@ using RecruitingPlatform.Entities;
 
 namespace RecruitingPlatform.Services.Auth;
 
-public class LogInService (SignInManager<User> _signInManager) : ILogInService
+public class LogInService (
+    SignInManager<User> _signInManager)
+    : ILogInService
 {
      public async Task<bool> ExecuteAsync(LogInDto dto)
      {

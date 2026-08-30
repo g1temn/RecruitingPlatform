@@ -4,7 +4,9 @@ using RecruitingPlatform.Entities;
 
 namespace RecruitingPlatform.Services.Auth;
 
-public class CheckEmailExistsService (RecruitingPlatformDbContext _dbContext) : ICheckEmailExsistsService
+public class CheckEmailExistsService (
+    RecruitingPlatformDbContext _dbContext)
+    : ICheckEmailExsistsService
 {
     public async Task<bool> ExecuteAcync(string email)
     {

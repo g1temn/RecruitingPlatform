@@ -4,7 +4,9 @@ using RecruitingPlatform.Entities;
 
 namespace RecruitingPlatform.Services.Specialties;
 
-public class GetAllSpecialtiesService(RecruitingPlatformDbContext _dbContext) : IGetAllSpecialtiesService
+public class GetAllSpecialtiesService(
+    RecruitingPlatformDbContext _dbContext) 
+    : IGetAllSpecialtiesService
 {
     public async Task<IEnumerable<Specialty>> ExecuteAsync()
     {

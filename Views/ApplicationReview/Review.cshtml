@@ -4,6 +4,14 @@
     var jobSeeker = Model.Application.Resume?.JobSeeker;
     var resume = Model.Application.Resume;
     var vacancy = Model.Application.Vacancy;
+
+    var statusName = Model.Application.ApplicationStatus?.Name?.ToLower() ?? "";
+    var statusClass = statusName switch
+    {
+        "approved" or "схвалено" or "прийнято" => "bg-brand-green/10 text-brand-green border-brand-green/40",
+        "rejected" or "відхилено" => "bg-brand-red/10 text-brand-red border-brand-red/30",
+        _ => "bg-brand-mint/40 text-brand-dark border-brand-mint/50"
+    };
 }
 
 <main class="max-w-6xl flex-grow mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full relative flex flex-col font-inter">
@@ -98,7 +106,7 @@
 
                 <div class="mb-6">
                     <span class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Поточний статус</span>
-                    <span class="inline-block bg-brand-mint/40 text-brand-dark text-sm font-bold px-4 py-1.5 rounded-md border border-brand-mint/50">
+                    <span class="inline-block text-sm font-bold px-4 py-1.5 rounded-md border @statusClass">
                         @Model.Application.ApplicationStatus?.Name
                     </span>
                     <p class="text-xs text-gray-400 mt-2">Дата подачі: @Model.Application.AppliedAt.ToString("dd.MM.yyyy HH:mm")</p>

@@ -29,10 +29,14 @@ namespace RecruitingPlatform.Controllers
 
             var result = await _getResumesWithFiltersService.ExecuteAsync(filters);
 
+            var specialties = await _getAllSpecialtiesService.ExecuteAsync();
+
             ViewBag.CurrentPage = result.CurrentPage;
             ViewBag.TotalPages = result.TotalPages;
             ViewBag.TotalItems = result.TotalItems;
+
             ViewBag.Filters = filters;
+            ViewBag.Specialties = specialties;
 
             return View(result.Items);
         }

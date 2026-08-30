@@ -14,7 +14,6 @@
         </div>
     }
 
-    <!-- Навігація та заголовок -->
     <div class="mb-6 sm:mb-8 flex flex-col gap-2">
         <a asp-controller="Vacancies" asp-action="Details" asp-route-id="@Model.Vacancy.Id"
            class="text-brand-blue hover:text-brand-dark font-medium flex items-center gap-2 transition-colors w-fit text-sm sm:text-base">
@@ -28,10 +27,8 @@
         </h1>
     </div>
 
-    <!-- Основна сітка -->
     <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 sm:gap-8">
 
-        <!-- Ліва колонка: Інформація про вакансію -->
         <div class="lg:col-span-2 flex flex-col gap-4">
             <div class="bg-brand-light-blue p-6 sm:p-8 rounded-2xl border border-brand-cyan/30 shadow-sm sticky top-6">
                 <span class="inline-block bg-brand-mint/40 text-brand-dark text-xs sm:text-sm font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-4">
@@ -60,13 +57,11 @@
             </div>
         </div>
 
-        <!-- Права колонка: Форма -->
         <div class="lg:col-span-3">
             <form asp-controller="Applications" asp-action="Apply" method="post" class="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col gap-8">
 
                 <input type="hidden" asp-for="FormData.VacancyId" value="@Model.Vacancy.Id" />
 
-                <!-- Вибір резюме -->
                 <div class="flex flex-col gap-4">
                     <h3 class="font-poppins font-bold text-brand-dark text-lg sm:text-xl border-b-2 border-brand-cyan/40 pb-2">
                         Оберіть резюме <span class="text-brand-red">*</span>
@@ -87,7 +82,6 @@
                     </div>
                 </div>
 
-                <!-- Супровідний лист -->
                 <div class="flex flex-col gap-4">
                     <div class="flex flex-col gap-1">
                         <h3 class="font-poppins font-bold text-brand-dark text-lg sm:text-xl border-b-2 border-brand-cyan/40 pb-2">
@@ -101,7 +95,6 @@
                               placeholder="Доброго дня! Я зацікавлений(а) у цій вакансії, оскільки..."></textarea>
                 </div>
 
-                <!-- Кнопка -->
                 <div class="pt-6 border-t border-gray-100 flex justify-end">
                     <button type="submit" class="w-full sm:w-auto px-10 py-3.5 bg-brand-red text-white font-poppins font-bold rounded-xl shadow-md transition-all hover:bg-brand-dark hover:-translate-y-0.5 hover:shadow-lg focus:ring-4 focus:ring-brand-red/30 duration-200 text-base sm:text-lg">
                         Відправити заявку

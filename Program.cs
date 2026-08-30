@@ -2,20 +2,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RecruitingPlatform.Data;
 using RecruitingPlatform.Entities;
-using RecruitingPlatform.Services.Applications;
-using RecruitingPlatform.Services.Auth;
-using RecruitingPlatform.Services.Currencies;
-using RecruitingPlatform.Services.Employers;
-using RecruitingPlatform.Services.JobSeekers;
-using RecruitingPlatform.Services.Locations;
-using RecruitingPlatform.Services.Profile;
-using RecruitingPlatform.Services.Resumes;
-using RecruitingPlatform.Services.Skills;
-using RecruitingPlatform.Services.Specialties;
-using RecruitingPlatform.Services.Vacancies;
+using RecruitingPlatform.Extensions;
 
 DotNetEnv.Env.Load();
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -34,7 +23,6 @@ builder.Services.AddIdentity<User, UserRole>(options =>
     options.Password.RequireUppercase = false;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequiredLength = 8;
-
     options.User.RequireUniqueEmail = true;
 })
 .AddEntityFrameworkStores<RecruitingPlatformDbContext>()
@@ -46,36 +34,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 
-builder.Services.AddScoped<ILogInService, LogInService>();
-builder.Services.AddScoped<ILogOutService, LogOutService>();
-builder.Services.AddScoped<ISignJobSeekerUpService, SignJobSeekerUpService>();
-builder.Services.AddScoped<ISignEmployerUpService, SignEmployerUpService>();
-builder.Services.AddScoped<ICheckEmailExsistsService, CheckEmailExistsService>();
-builder.Services.AddScoped<IGetVacanciesWithFiltersService, GetVacanciesWithFiltersService>();
-builder.Services.AddScoped<IGetVacancyByIdService, GetVacancyByIdService>();
-builder.Services.AddScoped<IGetResumesWithFiltersService, GetResumesWithFiltersService>();
-builder.Services.AddScoped<IGetResumeByIdService, GetResumeByIdService>();
-builder.Services.AddScoped<IGetActiveResumesByJobSeekerIdService, GetActiveResumesByJobSeekerIdService>();
-builder.Services.AddScoped<ICreateApplicationService, CreateApplicationService>();
-builder.Services.AddScoped<IGetAllSpecialtiesService, GetAllSpecialtiesService>();
-builder.Services.AddScoped<IGetAllSkillsService, GetAllSkillsService>();
-builder.Services.AddScoped<ICreateApplicationService, CreateApplicationService>();
-builder.Services.AddScoped<IGetActiveResumesByJobSeekerIdService, GetActiveResumesByJobSeekerIdService>();
-builder.Services.AddScoped<IGetJobSeekerProfileService, GetJobSeekerProfileService>();
-builder.Services.AddScoped<IGetEmployerProfileService, GetEmployerProfileService>();
-builder.Services.AddScoped<IGetAllLocationsService, GetAllLocationsService>();
-builder.Services.AddScoped<IGetAllCurrenciesService, GetAllCurrenciesService>();
-builder.Services.AddScoped<ICreateVacancyService, CreateVacancyService>();
-builder.Services.AddScoped<IGetAllApplicationStatusesService, GetAllApplicationStatusesService>();
-builder.Services.AddScoped<IGetApplicationForReviewService, GetApplicationForReviewService>();
-builder.Services.AddScoped<IUpdateApplicationStatusService, UpdateApplicationStatusService>();
-builder.Services.AddScoped<ICreateResumeService, CreateResumeService>();
-builder.Services.AddScoped<IEditJobSeekerProfileService, EditJobSeekerProfileService>();
-builder.Services.AddScoped<IEditEmployerProfileService, EditEmployerProfileService>();
-builder.Services.AddScoped<IEditResumeService,  EditResumeService>();
-builder.Services.AddScoped<IDeleteResumeService, DeleteResumeService>();
-builder.Services.AddScoped<IDeleteVacancyService, DeleteVacancyService>();
-builder.Services.AddScoped<IEditVacancyService, EditVacancyService>();
+// ВИКЛИКАЄМО НАШ ЧИСТИЙ МЕТОД З УСІМА СЕРВІСАМИ
+builder.Services.AddCustomServices();
 
 var app = builder.Build();
 
@@ -83,15 +43,12 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseRouting();
-
 app.UseAuthorization();
-
 app.MapStaticAssets();
 
 app.MapControllerRoute(
@@ -99,6 +56,7 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+// Сідінг адміна
 await AdminSeeder.SeedAsync(app.Services);
 
 await app.RunAsync();

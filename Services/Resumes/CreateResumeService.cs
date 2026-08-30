@@ -4,7 +4,9 @@ using RecruitingPlatform.Entities;
 
 namespace RecruitingPlatform.Services.Resumes;
 
-public class CreateResumeService(RecruitingPlatformDbContext _dbContext) : ICreateResumeService
+public class CreateResumeService(
+    RecruitingPlatformDbContext _dbContext) 
+    : ICreateResumeService
 {
     public async Task<int> ExecuteAsync(CreateResumeDto dto, int jobSeekerId)
     {

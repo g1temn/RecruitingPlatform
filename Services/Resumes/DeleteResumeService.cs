@@ -3,7 +3,9 @@ using RecruitingPlatform.Data;
 
 namespace RecruitingPlatform.Services.Resumes;
 
-public class DeleteResumeService(RecruitingPlatformDbContext _dbContext) : IDeleteResumeService
+public class DeleteResumeService(
+    RecruitingPlatformDbContext _dbContext) 
+    : IDeleteResumeService
 {
     public async Task<bool> DeleteAsync(int resumeId, int jobSeekerId, bool isAdmin = false)
     {

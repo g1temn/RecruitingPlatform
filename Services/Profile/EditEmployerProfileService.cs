@@ -4,7 +4,9 @@ using RecruitingPlatform.DTOs.Employers;
 
 namespace RecruitingPlatform.Services.Employers;
 
-public class EditEmployerProfileService(RecruitingPlatformDbContext _dbContext) : IEditEmployerProfileService
+public class EditEmployerProfileService(
+    RecruitingPlatformDbContext _dbContext) 
+    : IEditEmployerProfileService
 {
     public async Task<EditEmployerDto?> GetProfileForEditAsync(int companyId)
     {

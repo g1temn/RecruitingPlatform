@@ -96,7 +96,7 @@ public class AuthController(
         var success = await _signJobSeekerUpService.ExecuteAsync(dto);
         if (success)
         {
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("LogIn", "Auth");
         }
 
         ModelState.AddModelError(string.Empty, AuthConstants.JobSeekerRegistrationError);
@@ -117,7 +117,7 @@ public class AuthController(
         var success = await _signEmployerUpService.ExecuteAsync(dto);
         if (success)
         {
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("LogIn", "Auth");
         }
 
         ModelState.AddModelError(string.Empty, AuthConstants.EmployerRegistrationError);
