@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using RecruitingPlatform.Const.Vacancies;
 using RecruitingPlatform.DTOs.Vacancies;
 using RecruitingPlatform.Enums;
@@ -22,7 +23,8 @@ namespace RecruitingPlatform.Controllers
         IGetAllCurrenciesService _getAllCurrenciesService,
         IGetAllLocationsService _getAllLocationsService,
         IEditVacancyService _editVacancyService,
-        IDeleteVacancyService _deleteVacancyService)
+        IDeleteVacancyService _deleteVacancyService,
+        ILogger<VacanciesController> _logger)
         : Controller
     {
         [Authorize(Roles = nameof(PossibleUserRole.JobSeeker) + "," + nameof(PossibleUserRole.Admin))]
@@ -31,12 +33,12 @@ namespace RecruitingPlatform.Controllers
         {
             if (filters.Page < 1) filters.Page = 1;
 
+            _logger.LogInformation("Fetching vacancies with filters. Page: {Page}", filters.Page);
             var result = await _getVacanciesWithFiltersService.ExecuteAsync(filters);
 
             ViewBag.CurrentPage = result.CurrentPage;
             ViewBag.TotalPages = result.TotalPages;
             ViewBag.TotalItems = result.TotalItems;
-
             ViewBag.Filters = filters;
             ViewBag.Locations = await _getAllLocationsService.ExecuteAsync();
             ViewBag.Specialties = await _getAllSpecialtiesService.ExecuteAsync();
@@ -49,7 +51,11 @@ namespace RecruitingPlatform.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var vacancy = await _getVacancyByIdService.ExecuteAsync(id);
-            if (vacancy == null) return View("VacancyNotFound");
+            if (vacancy == null)
+            {
+                _logger.LogWarning("Requested details for non-existent vacancy ID: {VacancyId}", id);
+                return View("VacancyNotFound");
+            }
             return View(vacancy);
         }
 
@@ -78,10 +84,17 @@ namespace RecruitingPlatform.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateVacancyDto formData)
         {
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userIdString, out int companyId))
+            {
+                _logger.LogWarning("Failed to parse company ID from claims during vacancy creation.");
+                return Unauthorized();
+            }
+
             if (!ModelState.IsValid)
             {
+                _logger.LogWarning("Invalid model state submitted during vacancy creation by company ID: {CompanyId}", companyId);
                 var allSkills = await _getAllSkillsService.ExecuteAsync();
-
                 var viewModel = new CreateVacancyViewModel
                 {
                     Specialties = await _getAllSpecialtiesService.ExecuteAsync(),
@@ -95,10 +108,8 @@ namespace RecruitingPlatform.Controllers
                 return View(viewModel);
             }
 
-            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!int.TryParse(userIdString, out int companyId)) return Unauthorized();
-
             await _createVacancyService.ExecuteAsync(formData, companyId);
+            _logger.LogInformation("Company {CompanyId} successfully created a new vacancy.", companyId);
 
             TempData["SuccessMessage"] = "Вакансію успішно створено!";
             return RedirectToAction("Index", "EmployerProfile");
@@ -114,7 +125,11 @@ namespace RecruitingPlatform.Controllers
             bool isAdmin = User.IsInRole(nameof(PossibleUserRole.Admin));
 
             var dto = await _editVacancyService.GetForEditAsync(id, companyId, isAdmin);
-            if (dto == null) return NotFound(VacanciesConstants.VacancyNotFoundErrorMessage);
+            if (dto == null)
+            {
+                _logger.LogWarning("Vacancy {VacancyId} not found or company {CompanyId} lacks edit permissions.", id, companyId);
+                return NotFound(VacanciesConstants.VacancyNotFoundErrorMessage);
+            }
 
             var allSkills = await _getAllSkillsService.ExecuteAsync();
             var viewModel = new EditVacancyViewModel
@@ -134,8 +149,12 @@ namespace RecruitingPlatform.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditVacancyDto formData)
         {
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userIdString, out int companyId)) return Unauthorized();
+
             if (!ModelState.IsValid)
             {
+                _logger.LogWarning("Invalid model state submitted during vacancy edit for vacancy ID: {VacancyId}", formData.Id);
                 var allSkills = await _getAllSkillsService.ExecuteAsync();
                 var viewModel = new EditVacancyViewModel
                 {
@@ -148,15 +167,12 @@ namespace RecruitingPlatform.Controllers
                 return View(viewModel);
             }
 
-            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!int.TryParse(userIdString, out int companyId)) return Unauthorized();
-
             bool isAdmin = User.IsInRole(nameof(PossibleUserRole.Admin));
-
             bool isSuccess = await _editVacancyService.UpdateAsync(companyId, formData, isAdmin);
 
             if (!isSuccess)
             {
+                _logger.LogError("Failed to update vacancy {VacancyId} by company {CompanyId}.", formData.Id, companyId);
                 ModelState.AddModelError(string.Empty, VacanciesConstants.VacancyUpdateFailedMessage);
                 var allSkills = await _getAllSkillsService.ExecuteAsync();
                 var viewModel = new EditVacancyViewModel
@@ -170,6 +186,7 @@ namespace RecruitingPlatform.Controllers
                 return View(viewModel);
             }
 
+            _logger.LogInformation("Successfully updated vacancy {VacancyId}.", formData.Id);
             TempData[VacanciesConstants.SuccessMessageTempDataKey] = VacanciesConstants.VacancyUpdatedSuccessMessage;
             return RedirectToAction(nameof(Details), new { id = formData.Id });
         }
@@ -183,15 +200,16 @@ namespace RecruitingPlatform.Controllers
             if (!int.TryParse(userIdString, out int companyId)) return Unauthorized();
 
             bool isAdmin = User.IsInRole(nameof(PossibleUserRole.Admin));
-
             bool isSuccess = await _deleteVacancyService.DeleteAsync(id, companyId, isAdmin);
 
             if (!isSuccess)
             {
+                _logger.LogError("Failed to delete vacancy {VacancyId} by company {CompanyId}. IsAdmin: {IsAdmin}", id, companyId, isAdmin);
                 TempData[VacanciesConstants.ErrorMessageTempDataKey] = VacanciesConstants.VacancyDeleteFailedMessage;
                 return RedirectToAction(nameof(Details), new { id = id });
             }
 
+            _logger.LogInformation("Successfully deleted vacancy {VacancyId}.", id);
             TempData[VacanciesConstants.SuccessMessageTempDataKey] = VacanciesConstants.VacancyDeletedSuccessMessage;
 
             if (isAdmin)
