@@ -1,3 +1,5 @@
 <Solution>
-  <Project Path="RecruitingPlatform.csproj" />
+  <Project Path="RecruitingPlatform.IntegrationTests/RecruitingPlatform.IntegrationTests.csproj" />
+  <Project Path="RecruitingPlatform.UnitTests/RecruitingPlatform.UnitTests.csproj" />
+  <Project Path="RecruitingPlatform/RecruitingPlatform.csproj" />
 </Solution>

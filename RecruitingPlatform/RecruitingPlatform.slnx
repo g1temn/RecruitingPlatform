@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="../RecruitingPlatform.IntegrationTests/RecruitingPlatform.IntegrationTests.csproj" Id="b484fca0-6356-4346-8897-926524c756a4" />
+  <Project Path="../RecruitingPlatform.UnitTests/RecruitingPlatform.UnitTests.csproj" Id="789b7f5e-579c-4c75-bdd7-bc1386010573" />
+  <Project Path="RecruitingPlatform.csproj" />
+</Solution>
