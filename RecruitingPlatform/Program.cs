@@ -46,6 +46,8 @@ try
     {
         options.ExpireTimeSpan = TimeSpan.FromDays(3);
         options.SlidingExpiration = true;
+        options.LoginPath = "/Auth/LogIn";
+        options.AccessDeniedPath = "/Home/Index";
     });
 
     builder.Services.AddCustomServices();
@@ -73,12 +75,16 @@ try
     await AdminSeeder.SeedAsync(app.Services);
 
     await app.RunAsync();
+
 }
 catch (Exception ex)
 {
     Log.Fatal(ex, "Application failed during the start");
+    throw;
 }
 finally
 {
     await Log.CloseAndFlushAsync();
 }
+
+public partial class Program { }
