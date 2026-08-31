@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RecruitingPlatform.Data;
-using RecruitingPlatform.DTOs.Employers;
+using RecruitingPlatform.DTOs.Employer;
 
 namespace RecruitingPlatform.Services.Employers;
 

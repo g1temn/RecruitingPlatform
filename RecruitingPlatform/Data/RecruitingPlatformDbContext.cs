@@ -19,6 +19,7 @@ namespace RecruitingPlatform.Data
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<Specialty> Specialties { get; set; }
         public DbSet<Skill> Skills { get; set; }
+        public DbSet<SkillType> SkillTypes { get; set; }
         public DbSet<Resume> Resumes { get; set; }
         public DbSet<Vacancy> Vacancies { get; set; }
         public DbSet<ResumeSkill> ResumeSkills { get; set; }

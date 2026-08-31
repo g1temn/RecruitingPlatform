@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using RecruitingPlatform.Const.Employers;
 
-namespace RecruitingPlatform.DTOs.Employers;
+namespace RecruitingPlatform.DTOs.Employer;
 
 public class EditEmployerDto
 {

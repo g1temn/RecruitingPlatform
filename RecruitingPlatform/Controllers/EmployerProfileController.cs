@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RecruitingPlatform.Const.Employers;
-using RecruitingPlatform.DTOs.Employers;
+using RecruitingPlatform.DTOs.Employer;
 using RecruitingPlatform.Services.Employers;
 using RecruitingPlatform.Services.Profile;
 using RecruitingPlatform.ViewModels.Employers;
